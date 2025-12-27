@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NourBest OS 2050 | Ultimate Edition</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;700;800;900&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+    <canvas id="matrix-bg"></canvas>
+
+    <div class="top-status-bar">
+        <div class="status-item"><span class="pulse-dot"></span> GDS Connected</div>
+        <div class="status-item" id="universal-clock">UTC: 00:00:00</div>
+        <div class="status-item"><i class="fas fa-wifi"></i> 1.2 Gbps</div>
+    </div>
+
+    <div id="loader-screen">
+        <div class="loader-ring"></div>
+        <div class="loader-text">NOURBEST OS LOADING...</div>
+    </div>
+
+    <div class="modal-overlay" id="booking-modal">
+        <div class="modal-box">
+            <h2 id="modal-title">...</h2>
+            
+            <div class="journey-timeline">
+                <div class="timeline-step active"><i class="fas fa-plane"></i></div>
+                <div class="timeline-line"></div>
+                <div class="timeline-step"><i class="fas fa-hotel"></i></div>
+                <div class="timeline-line"></div>
+                <div class="timeline-step"><i class="fas fa-car"></i></div>
+            </div>
+
+            <div id="integration-details" class="modal-info-grid">
+                <div class="info-card" id="hotel-info"><i class="fas fa-bed"></i> <span>جاري جلب الفنادق...</span></div>
+                <div class="info-card" id="car-info"><i class="fas fa-key"></i> <span>جاري ربط التأجير...</span></div>
+                <div class="info-card" id="map-preview"><i class="fas fa-map-marked-alt"></i> <span>معاينة الخريطة</span></div>
+            </div>
+
+            <p id="modal-desc">...</p>
+
+            <div class="digital-ticket">
+                <div class="qr-placeholder"><i class="fas fa-qrcode"></i></div>
+                <div class="ticket-id">NB-OS-2050-XXXX</div>
+            </div>
+
+            <div class="modal-actions">
+                <button onclick="closeModal()" class="btn-cancel">إلغاء</button>
+                <button onclick="finalConfirm()" class="btn-confirm">تأكيد الحجز المتكامل</button>
+            </div>
+        </div>
+    </div>
+
+    <aside class="sidebar">
+        <div class="pilot-profile">
+            <div class="pilot-avatar"><i class="fas fa-user-astronaut"></i></div>
+            <div class="pilot-info">
+                <div class="pilot-name">القائد: نور</div>
+                <div class="pilot-rank">رتبة: مسافر كوني</div>
+                <div class="loyalty-bar"><div class="progress" style="width: 65%;"></div></div>
+            </div>
+        </div>
+
+        <div class="brand-box">
+            <h1 class="brand-title">NOURBEST OS</h1>
+            <div class="brand-sub">ULTIMATE EDITION</div>
+        </div>
+
+        <div class="system-widgets">
+            <div class="widget" id="weather-widget">
+                <i class="fas fa-cloud-sun"></i> <span>24°C - الرياض</span>
+            </div>
+            <div class="widget" id="currency-widget">
+                <i class="fas fa-coins"></i> <span>1 USD = 3.75 SAR</span>
+            </div>
+            <div class="widget emergency" title="طوارئ عالمية">
+                <i class="fas fa-phone-alt"></i> <span>مركز الطوارئ</span>
+            </div>
+        </div>
+
+        <div class="digital-vault">
+            <div class="vault-title"><i class="fas fa-shield-alt"></i> المحفظة الرقمية</div>
+            <div class="vault-items">
+                <i class="fas fa-id-card" title="التأشيرات"></i>
+                <i class="fas fa-file-medical" title="الشهادات الصحية"></i>
+                <i class="fas fa-key" title="مفاتيح الفنادق"></i>
+            </div>
+        </div>
+
+        <div class="favorites-section">
+            <div class="fav-title">
+                <span>⭐ المحفظة الكونية</span>
+                <span id="fav-count">0</span>
+            </div>
+            <div id="fav-list">
+                <div style="text-align:center; color:#555; margin-top:20px;">لا توجد رحلات محفوظة</div>
+            </div>
+        </div>
+
+        <div class="log-title">> سياقية الأداء:</div>
+        <div class="terminal-window" id="terminal"></div>
+    </aside>
+
+    <main class="main-wrapper">
+        <div id="google_translate_element"></div>
+        
+        <div class="header-section">
+            <h1 class="header-title">المركز القيادي</h1>
+            <p class="header-desc">
+                مرحباً أيها القائد. المصفوفة تعمل بكفاءة 100%. تم تجميع 20 مساراً كونياً مرتبطاً بـ 40 ألف مطار وأنظمة الحجز العالمية.
+            </p>
+        </div>
+
+        <div class="control-bar">
+            <div class="search-wrapper">
+                <span style="font-size:1.2rem; color: var(--neon-blue);">🔍</span>
+                <input type="text" class="search-input" id="search-box" list="airports-list" placeholder="ابحث عن مطار، وجهة، أو فندق..." onkeyup="filterGrid()">
+                <datalist id="airports-list">
+                    <option value="JED - مطار الملك عبدالعزيز الدولي">
+                    <option value="RUH - مطار الملك خالد الدولي">
+                    <option value="DXB - مطار دبي الدولي">
+                    <option value="LHR - مطار هيثرو لندن">
+                    <option value="JFK - مطار جون كينيدي">
+                    <option value="HND - مطار طوكيو هانيدا">
+                    <option value="CDG - مطار شارل ديغول">
+                </datalist>
+            </div>
+
+            <div class="quick-filters">
+                <button onclick="filterType('flight')" title="طيران"><i class="fas fa-plane"></i></button>
+                <button onclick="filterType('hotel')" title="فنادق"><i class="fas fa-hotel"></i></button>
+                <button onclick="filterType('car')" title="سيارات"><i class="fas fa-car"></i></button>
+            </div>
+            
+            <select class="filter-select" id="sort-select" onchange="filterGrid()">
+                <option value="default">ترتيب ذكي</option>
+                <option value="price-asc">السعر: من الأقل</option>
+                <option value="risk-low">الأمان: الأكثر أماناً</option>
+            </select>
+        </div>
+
+        <div class="trips-grid" id="grid-container"></div>
+        
+        <footer class="main-footer">
+            <div class="connectivity-info">
+                <span class="status-online"></span> Global GDS Systems: Active | Nodes: 1024
+            </div>
+            &copy; 2050 NourBest OS. All Galactic Rights Reserved.
+        </footer>
+    </main>
+
+    <script src="./app.js"></script>
+    
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'ar',
+                includedLanguages: 'en,zh-CN,es,fr,de,ja,ru,pt,it,ko,tr,hi,bn,te,mr,ta,ur,gu,kn,ml,pa,th,id,nl,el,pl,sv,no,da,fi,he,cs,hu,ro,uk,bg,hr,sk,sl,et,lt,lv,ms,sq,bs,mk,sr,hy,ka,az,uz,kk,tk,ky,tg,mn,km,lo,my,ne,si,am,sw,zu,xh,yo,ig,ha,af,is,ga,mt,cy,gd,gl,eu,ca,fy,lb,eo,la',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: false
+            }, 'google_translate_element');
+        }
+    </script>
+    
+    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+</body>
+</html>

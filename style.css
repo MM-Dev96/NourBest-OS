@@ -1,0 +1,363 @@
+/* ==================== المتغيرات والإعدادات ==================== */
+:root {
+    --bg-deep: #020408;
+    --glass-panel: rgba(10, 20, 35, 0.9);
+    --neon-blue: #00f3ff;
+    --neon-green: #0aff0a;
+    --neon-red: #ff2a2a;
+    --neon-gold: #ffd700;
+    --neon-purple: #bc13fe;
+    --sidebar-width: 340px;
+    --card-radius: 20px;
+    --font-main: 'Tajawal', sans-serif;
+    --font-tech: 'Orbitron', sans-serif;
+}
+
+* { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
+
+body {
+    background-color: var(--bg-deep);
+    color: #fff;
+    font-family: var(--font-main);
+    margin: 0; padding: 0;
+    overflow-x: hidden;
+    min-height: 100vh;
+    display: flex;
+}
+
+/* خلفية المطر الرقمي */
+canvas#matrix-bg {
+    position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: -1; opacity: 0.15;
+    pointer-events: none;
+}
+.pulse-dot {
+    height: 8px; width: 8px; background-color: var(--neon-green);
+    border-radius: 50%; display: inline-block; margin-left: 5px;
+    box-shadow: 0 0 10px var(--neon-green); animation: pulse-green 2s infinite;
+}
+@keyframes pulse-green { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; }
+ }
+
+  /* شريط الحالة العلوي - لعرض الوقت والاتصال */
+.top-status-bar {
+    position: fixed; top: 0; left: 0; width: 100%; height: 30px;
+    background: rgba(0, 0, 0, 0.8); border-bottom: 1px solid rgba(0, 243, 255, 0.2);
+    z-index: 2000; display: flex; justify-content: space-between; align-items: center;
+    padding: 0 20px; font-family: var(--font-tech); font-size: 0.65rem; color: #888;
+}
+::-webkit-scrollbar { width: 6px; background: #000; }
+::-webkit-scrollbar-thumb { background: var(--neon-blue); border-radius: 3px; }
+
+/* ==================== شاشة التحميل ==================== */
+#loader-screen {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: #000; z-index: 99999;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    transition: opacity 1s ease-out;
+}
+.loader-ring {
+    width: 120px; height: 120px; border: 4px solid transparent;
+    border-top-color: var(--neon-blue); border-radius: 50%;
+    animation: spin 1s linear infinite; margin-bottom: 20px;
+    box-shadow: 0 0 20px var(--neon-blue);
+}
+.loader-ring::before {
+    content: ""; position: absolute; top: 10px; left: 10px; right: 10px; bottom: 10px;
+    border: 4px solid transparent; border-top-color: var(--neon-purple);
+    border-radius: 50%; animation: spin 2s linear infinite;
+}
+.loader-text {
+    font-family: var(--font-tech); letter-spacing: 5px;
+    color: var(--neon-blue); animation: pulse 1.5s infinite;
+}
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+@keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; text-shadow: 0 0 20px var(--neon-blue); } 100% { opacity: 0.5; } }
+
+/* ==================== اللوحة الجانبية ==================== */
+.sidebar {
+    width: var(--sidebar-width); height: 100vh;
+    background: rgba(5, 10, 20, 0.95);
+    border-left: 2px solid var(--neon-blue);
+    position: fixed; right: 0; top: 0; z-index: 1000;
+    padding: 50px 20px 20px; display: flex; flex-direction: column;
+    backdrop-filter: blur(10px); box-shadow: -5px 0 30px rgba(0,0,0,0.8);
+}
+.brand-box { text-align: center; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 15px; }
+.brand-title { font-family: var(--font-tech); font-size: 1.8rem; color: #fff; margin: 0; letter-spacing: 2px; }
+.brand-sub { color: var(--neon-blue); font-size: 0.7rem; letter-spacing: 4px; }
+/* بروفايل القائد والأنظمة الحقيقية في السايدبار */
+.pilot-profile {
+    display: flex; align-items: center; gap: 12px; padding: 12px;
+    background: rgba(0, 243, 255, 0.05); border-radius: 15px; margin-bottom: 15px;
+    border: 1px solid rgba(0, 243, 255, 0.1);
+}
+.pilot-avatar {
+    width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--neon-blue);
+    display: flex; justify-content: center; align-items: center; color: var(--neon-blue);
+}
+.loyalty-bar { width: 100%; height: 4px; background: #222; border-radius: 5px; margin-top: 5px; overflow: hidden; }
+.loyalty-bar .progress { height: 100%; background: var(--neon-blue); box-shadow: 0 0 10px var(--neon-blue); }
+
+.systems-hub { margin-bottom: 20px; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 10px; border: 1px solid #333; }
+.hub-icons { display: flex; justify-content: space-around; font-size: 1.2rem; color: #555; }
+.hub-icons i:hover { color: var(--neon-blue); cursor: pointer; }
+.favorites-section {
+    flex-grow: 1; margin-bottom: 20px;
+    border: 1px solid #333; border-radius: 10px;
+    padding: 10px; background: rgba(0,0,0,0.3); overflow-y: auto;
+}
+.fav-title { font-size: 0.9rem; color: var(--neon-gold); margin-bottom: 10px; display: flex; justify-content: space-between; }
+.fav-item {
+    background: rgba(255,255,255,0.05); padding: 8px;
+    border-radius: 8px; margin-bottom: 5px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 0.8rem; border: 1px solid transparent;
+}
+.fav-item:hover { border-color: var(--neon-gold); }
+.fav-remove { color: var(--neon-red); cursor: pointer; font-weight: bold; padding: 0 5px; }
+
+.log-title { font-weight:bold; color:var(--neon-blue); margin-bottom:5px; }
+.terminal-window {
+    height: 150px; background: #000; border: 1px solid #333;
+    border-radius: 8px; padding: 10px; overflow-y: auto;
+    font-family: monospace; font-size: 0.7rem; color: var(--neon-green);
+}
+
+/* ==================== المحتوى الرئيسي ==================== */
+.main-wrapper {
+    margin-right: var(--sidebar-width); width: calc(100% - var(--sidebar-width));
+    padding: 60px 30px 30px; position: relative;
+}
+.header-section { text-align:center; margin-bottom:40px; }
+.header-title {
+    font-size:3.5rem; margin:0; text-transform:uppercase;
+    background:linear-gradient(to bottom, #fff, var(--neon-blue));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+}
+.control-bar {
+    background: var(--glass-panel); border: 1px solid var(--neon-blue);
+    border-radius: 50px; padding: 15px 30px; margin-bottom: 40px;
+    display: flex; gap: 20px; align-items: center;
+    box-shadow: 0 0 20px rgba(0, 243, 255, 0.1);
+}
+.search-input {
+    flex-grow: 1; background: transparent; border: none;
+    color: #fff; font-size: 1.1rem; font-family: var(--font-main);
+    border-bottom: 1px solid #555; padding: 5px;
+}
+.filter-select {
+   
+    background: #000; color: var(--neon-blue); border: 1px solid var(--neon-blue);
+    padding: 8px 15px; border-radius: 20px; cursor: pointer; font-weight: bold;
+}
+ /* أزرار البحث السريع عن طيران وفنادق */
+.quick-filters { display: flex; gap: 10px; margin: 0 15px; }
+.quick-filters button {
+    width: 38px; height: 38px; border-radius: 50%; border: 1px solid #333;
+    background: transparent; color: #fff; cursor: pointer; transition: 0.3s;
+}
+.quick-filters button:hover { border-color: var(--neon-blue); color: var(--neon-blue); }
+/* البطاقات */
+.trips-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px; padding-bottom: 60px;
+}
+.trip-card {
+    background: var(--glass-panel); border: 1px solid rgba(255,255,255,0.05);
+    border-radius: var(--card-radius); padding: 20px; position: relative;
+    transition: 0.3s; overflow: hidden; display: flex; flex-direction: column;
+}
+.trip-card:hover { transform: translateY(-10px); border-color: var(--neon-blue); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+
+.fav-btn {
+    position: absolute; top: 15px; left: 15px;
+    background: rgba(0,0,0,0.5); border: 1px solid #555;
+    color: #555; width: 35px; height: 35px; border-radius: 50%;
+    cursor: pointer; display: flex; justify-content: center; align-items: center;
+    font-size: 1.2rem; transition: 0.3s;
+}
+.fav-btn.active { color: var(--neon-red); border-color: var(--neon-red); text-shadow: 0 0 10px var(--neon-red); }
+
+.card-header { display: flex; justify-content: space-between; margin-bottom: 15px; }
+.card-badge { background: rgba(0, 243, 255, 0.1); color: var(--neon-blue); padding: 4px 10px; border-radius: 15px; font-size: 0.75rem; border: 1px solid var(--neon-blue); }
+.card-price { font-family: var(--font-tech); font-size: 1.4rem; color: var(--neon-gold); }
+.card-title { font-size: 1.6rem; margin: 10px 0; color: #fff; }
+.btn-select {
+    width: 100%; padding: 12px; background: transparent;
+    border: 2px solid var(--neon-green); color: var(--neon-green);
+    border-radius: 12px; cursor: pointer; transition: 0.3s;
+    font-weight: bold; margin-top: auto;
+}
+.btn-select:hover { background: var(--neon-green); color: #000; box-shadow: 0 0 20px var(--neon-green); }
+
+/* المودال */
+.modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.95); z-index: 9000; display: none;
+    justify-content: center; align-items: center; backdrop-filter: blur(5px);
+}
+.modal-overlay.active { display: flex; }
+.modal-box {
+    background: #050a14; width: 500px; padding: 40px; border: 2px solid var(--neon-blue);
+    border-radius: 30px; text-align: center; box-shadow: 0 0 50px rgba(0, 243, 255, 0.2);
+}
+.modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+.btn-cancel { flex:1; padding:15px; background:transparent; border:1px solid #555; color:#fff; border-radius:10px; cursor:pointer; }
+.btn-confirm { flex:2; padding:15px; background:var(--neon-blue); border:none; border-radius:10px; font-weight:bold; cursor:pointer; }
+
+/* الجدول الزمني والتذكرة الرقمية داخل نافذة الحجز */
+.journey-timeline { display: flex; align-items: center; justify-content: center; margin: 25px 0; }
+.timeline-step { width: 35px; height: 35px; border-radius: 50%; border: 1px solid #333; display: flex; justify-content: center; align-items: center; background: #000; z-index: 2; }
+.timeline-step.active { border-color: var(--neon-blue); color: var(--neon-blue); box-shadow: 0 0 10px var(--neon-blue); }
+.timeline-line { width: 50px; height: 1px; background: #333; margin: 0 -5px; z-index: 1; }
+
+.digital-ticket {
+    background: #fff; color: #000; padding: 20px; border-radius: 12px;
+    display: flex; align-items: center; gap: 20px; margin-top: 20px;
+    border-left: 8px solid var(--neon-blue); position: relative;
+}
+.qr-placeholder { font-size: 2.5rem; color: #000; }
+
+/* ==================== 5. تصميم زر الترجمة (الكبسولة النيون) ==================== */
+/* تم تحسين هذا الجزء ليدعم قائمة اللغات الطويلة بشكل احترافي */
+
+#google_translate_element {
+    position: fixed !important;
+    bottom: 25px !important;
+    left: 25px !important;
+    z-index: 2147483647 !important;
+    
+    background: rgba(0, 0, 0, 0.9) !important;
+    border: 2px solid var(--neon-blue) !important;
+    border-radius: 50px !important;
+    padding: 5px 15px !important;
+    
+    box-shadow: 0 0 15px rgba(0, 243, 255, 0.3) !important;
+    backdrop-filter: blur(5px);
+    
+    min-width: 160px;
+    height: 45px;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+/* تأثير التوهج عند تمرير الماوس على كبسولة الترجمة */
+#google_translate_element:hover {
+    box-shadow: 0 0 25px var(--neon-blue) !important;
+    transform: scale(1.05);
+}
+
+/* تنسيق القائمة المنسدلة للغات */
+.goog-te-combo {
+    background: transparent !important;
+    color: var(--neon-blue) !important;
+    border: none !important;
+    outline: none !important;
+    font-family: var(--font-main) !important;
+    font-weight: bold !important;
+    font-size: 14px !important;
+    cursor: pointer !important;
+    width: 100% !important;
+    margin: 0 !important;
+}
+
+/* تنسيق الخيارات داخل القائمة (للمتصفحات التي تدعمها) */
+.goog-te-combo option {
+    background-color: var(--bg-deep) !important;
+    color: #fff !important;
+    padding: 10px !important;
+}
+
+/* إخفاء إضافات جوجل غير الضرورية للحفاظ على نظافة الـ OS */
+.goog-te-gadget-icon { display: none !important; }
+.goog-te-gadget-simple { background: transparent !important; border: none !important; padding: 0 !important; }
+.goog-te-gadget span { display: none !important; }
+.goog-te-banner-frame { display: none !important; }
+.goog-logo-link { display: none !important; }
+.goog-te-gadget { color: transparent !important; }
+
+/* تصحيح موضع الجسم عند ظهور شريط الترجمة */
+body { top: 0 !important; }
+
+/* التذييل (Footer) */
+.main-footer { 
+    text-align: center; 
+    color: rgba(255, 255, 255, 0.3); 
+    margin-top: 50px; 
+    padding: 20px;
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+}
+/* تنسيق أدوات النظام (الطقس والعملة) */
+.system-widgets {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.widget {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid #333;
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: 0.3s;
+}
+
+.widget i { color: var(--neon-blue); }
+
+.widget:hover {
+    border-color: var(--neon-blue);
+    background: rgba(0, 243, 255, 0.05);
+}
+
+/* حالة الطوارئ باللون الأحمر */
+.widget.emergency {
+    border-color: rgba(255, 42, 42, 0.3);
+    color: var(--neon-red);
+}
+
+.widget.emergency i { color: var(--neon-red); }
+
+/* تنسيق المحفظة الرقمية */
+.digital-vault {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid #222;
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.vault-title {
+    font-size: 0.75rem;
+    color: var(--neon-gold);
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+}
+
+.vault-items {
+    display: flex;
+    justify-content: space-around;
+    font-size: 1.2rem;
+    color: #666;
+}
+
+.vault-items i {
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.vault-items i:hover {
+    color: var(--neon-gold);
+    text-shadow: 0 0 10px var(--neon-gold);
+    transform: scale(1.2);
+}
