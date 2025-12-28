@@ -24,6 +24,7 @@ const destinations = [
 
 let favorites = JSON.parse(localStorage.getItem('nourbest_favs')) || [];
 let currentSelection = "";
+let nourCoinBalance = parseFloat(localStorage.getItem('nour_coin_balance')) || 500.00;
 
 // ================= محرك الصوت =================
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -61,19 +62,17 @@ function playSystemSound(type) {
 // ================= محرك Matrix Rain =================
 const canvas = document.getElementById('matrix-bg');
 const ctx = canvas.getContext('2d');
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
-const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
-const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-const nums = '0123456789';
-const alphabet = katakana + latin + nums;
-
 const fontSize = 16;
-const columns = canvas.width/fontSize;
-const rainDrops = [];
+let columns, rainDrops;
+const alphabet = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
-for( let x = 0; x < columns; x++ ) { rainDrops[x] = 1; }
+function initMatrix() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    columns = canvas.width / fontSize;
+    rainDrops = Array(Math.floor(columns)).fill(1);
+}
+initMatrix(); // تشغيل أولي
 
 const drawMatrix = () => {
     ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
@@ -91,10 +90,38 @@ const drawMatrix = () => {
     }
 };
 setInterval(drawMatrix, 30);
-window.onresize = () => {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+
+// دالة فتح وإغلاق القائمة الجانبية في الجوال
+function toggleSidebar() {
+    playSystemSound('click'); 
+    const sidebar = document.querySelector('.sidebar');
+    sidebar.classList.toggle('active'); 
+    
+    if(sidebar.classList.contains('active')) {
+        addLog("Mobile Navigation Menu: Opened.");
+        }
+    }
+ // هنا أغلقنا القائمة لتعمل بشكل مستقل
+
+// منطق زر العودة للأعلى عند النزول بالصفحة (خارج الدالة ليعمل دائماً)
+window.onscroll = function() {
+    const topBtn = document.getElementById('back-to-top');
+    if (topBtn) {
+        if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+            topBtn.style.display = "flex";
+        } else {
+            topBtn.style.display = "none";
+        }
+    }
 };
+
+// عند الضغط على الزر يصعد للأعلى بسلاسة
+if(document.getElementById('back-to-top')) {
+    document.getElementById('back-to-top').onclick = function() {
+        window.scrollTo({top: 0, behavior: 'smooth'});
+        playSystemSound('hover');
+    };
+}
 // ================= المنطق الرئيسي =================
 window.onload = () => {
     setTimeout(() => {
@@ -214,17 +241,30 @@ function closeModal() {
     document.getElementById('booking-modal').classList.remove('active');
 }
 
+// استبدل دالة finalConfirm القديمة بهذا الكود:
 function finalConfirm() {
     playSystemSound('success');
     closeModal();
-    const msg = `تم حجز رحلة إلى ${currentSelection}`;
+    
+    // إضافة مكافأة الحجز (50.75 عملة)
+    nourCoinBalance += 50.75;
+    localStorage.setItem('nour_coin_balance', nourCoinBalance.toFixed(2));
+    updateVaultUI(); 
+
+    const msg = `تم حجز رحلة إلى ${currentSelection}. حصلت على مكافأة نيونية: 50.75 NC`;
     alert(msg);
     addLog(msg);
     
     const u = new SpeechSynthesisUtterance(msg);
-    const googleLang = document.querySelector('.goog-te-combo');
-    u.lang = googleLang ? googleLang.value : 'ar-SA';
     window.speechSynthesis.speak(u);
+}
+
+// دالة تحديث واجهة المحفظة
+function updateVaultUI() {
+    const vaultElement = document.getElementById('nour-balance');
+    if(vaultElement) {
+        vaultElement.innerText = nourCoinBalance.toFixed(2);
+    }
 }
 
 // ================= تهيئة محرك الترجمة (100 لغة) =================
@@ -235,16 +275,7 @@ function googleTranslateElementInit() {
         layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
         autoDisplay: false
     }, 'google_translate_element');
-}function updateClock() {
-    const now = new Date();
-    const timeString = "UTC: " + now.getUTCHours().toString().padStart(2, '0') + ":" + 
-                       now.getUTCMinutes().toString().padStart(2, '0') + ":" + 
-                       now.getUTCSeconds().toString().padStart(2, '0');
-    if(document.getElementById('universal-clock')) {
-        document.getElementById('universal-clock').innerText = timeString;
-    }
 }
-setInterval(updateClock, 1000); // تحديث كل ثانية
 // ================= دالة الفلاتر السريعة (طيران، فنادق، سيارات) =================
 function filterType(category) {
     playSystemSound('click'); // تشغيل صوت النيون عند الضغط
@@ -280,6 +311,17 @@ function filterType(category) {
 }
 
 // ================= دالة الساعة العالمية (لتعمل الساعة في شريط الحالة) =================
+
+// دالة مسح نص البحث وإعادة عرض كل الوجهات
+function clearFilters() {
+    playSystemSound('click');
+    document.getElementById('search-box').value = ""; 
+    document.getElementById('sort-select').value = "default"; 
+    renderGrid(destinations); 
+    addLog("Search Cleared: All nodes restored.");
+}
+// ================= وظائف النظام الموحدة =================
+
 function updateClock() {
     const now = new Date();
     const timeString = "UTC: " + 
@@ -288,16 +330,11 @@ function updateClock() {
         now.getUTCSeconds().toString().padStart(2, '0');
     
     const clockElement = document.getElementById('universal-clock');
-    if (clockElement) {
-        clockElement.innerText = timeString;
-    }
+    if (clockElement) clockElement.innerText = timeString;
 }
-
-// تشغيل الساعة كل ثانية
 setInterval(updateClock, 1000);
 
-// تحديث حجم المصفوفة (Matrix) عند تغيير حجم النافذة
 window.onresize = () => {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    initMatrix(); // إعادة تشغيل الماتريكس بالحجم الجديد
+    addLog("Matrix Recalibrated: Display adjusted."); // لمسة إضافية للسجل
 };

@@ -29,6 +29,7 @@
         <div class="status-item"><span class="pulse-dot"></span> GDS Connected</div>
         <div class="status-item" id="universal-clock">UTC: 00:00:00</div>
         <div class="status-item"><i class="fas fa-wifi"></i> 1.2 Gbps</div>
+        <div class="menu-trigger" onclick="toggleSidebar()" id="mobile-toggle"><i class="fas fa-bars"></i></div>
     </div>
 
     <div id="loader-screen">
@@ -82,7 +83,13 @@
             <h1 class="brand-title">NOURBEST OS</h1>
             <div class="brand-sub">ULTIMATE EDITION</div>
         </div>
-
+<nav class="system-nav">
+    <div class="nav-item active"><i class="fas fa-th-large"></i> المركز القيادي</div>
+    <div class="nav-item"><i class="fas fa-plane-departure"></i> جدول الرحلات</div>
+    <div class="nav-item"><i class="fas fa-map-marked-alt"></i> خريطة النودز</div>
+    <div class="nav-item"><i class="fas fa-history"></i> سجل العمليات</div>
+    <div class="nav-item"><i class="fas fa-cog"></i> إعدادات النظام</div>
+</nav>
         <div class="system-widgets">
             <div class="widget" id="weather-widget">
                 <i class="fas fa-cloud-sun"></i> <span>24°C - الرياض</span>
@@ -96,6 +103,7 @@
         </div>
 
         <div class="digital-vault">
+            <div class="vault-title">رصيد NourCoin الحالي: <span id="nour-balance" style="color:var(--neon-gold); font-family:var(--font-tech);">500.00</span> NC</div>
             <div class="vault-title"><i class="fas fa-shield-alt"></i> المحفظة الرقمية</div>
             <div class="vault-items">
                 <i class="fas fa-id-card" title="التأشيرات"></i>
@@ -144,6 +152,7 @@
             </div>
 
             <div class="quick-filters">
+                <button onclick="clearFilters()" title="إعادة ضبط"><i class="fas fa-sync-alt"></i></button>
                 <button onclick="filterType('flight')" title="طيران"><i class="fas fa-plane"></i></button>
                 <button onclick="filterType('hotel')" title="فنادق"><i class="fas fa-hotel"></i></button>
                 <button onclick="filterType('car')" title="سيارات"><i class="fas fa-car"></i></button>
@@ -167,7 +176,7 @@
     </main>
 
     <script src="./app.js"></script>
-    
+    <button id="back-to-top" class="back-to-top"><i class="fas fa-chevron-up"></i></button>
     <script type="text/javascript">
         function googleTranslateElementInit() {
             new google.translate.TranslateElement({

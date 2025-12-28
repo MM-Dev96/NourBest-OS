@@ -88,6 +88,32 @@ canvas#matrix-bg {
 .brand-title { font-family: var(--font-tech); font-size: 1.8rem; color: #fff; margin: 0; letter-spacing: 2px; }
 .brand-sub { color: var(--neon-blue); font-size: 0.7rem; letter-spacing: 4px; }
 /* بروفايل القائد والأنظمة الحقيقية في السايدبار */
+.system-nav {
+    margin: 15px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.nav-item {
+    padding: 12px 15px;
+    border-radius: 10px;
+    background: rgba(0, 243, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 0.9rem;
+    color: #aaa;
+}
+.nav-item:hover, .nav-item.active {
+    background: rgba(0, 243, 243, 0.1);
+    border-color: var(--neon-blue);
+    color: #fff;
+}
+.nav-item i {
+    margin-left: 10px;
+    color: var(--neon-blue);
+    width: 20px;
+}
 .pilot-profile {
     display: flex; align-items: center; gap: 12px; padding: 12px;
     background: rgba(0, 243, 255, 0.05); border-radius: 15px; margin-bottom: 15px;
@@ -360,4 +386,53 @@ body { top: 0 !important; }
     color: var(--neon-gold);
     text-shadow: 0 0 10px var(--neon-gold);
     transform: scale(1.2);
+} /* هذا القوس كان مفقوداً هنا لإغلاق التأثير */
+
+/* زر فتح القائمة للجوال */
+#mobile-toggle {
+    display: none;
+    color: var(--neon-blue);
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+/* زر العودة للأعلى */
+.back-to-top {
+    position: fixed;
+    bottom: 85px;
+    left: 25px;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: var(--glass-panel);
+    border: 1px solid var(--neon-blue);
+    color: var(--neon-blue);
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+/* ==================== استجابة الشاشات (Responsiveness) ==================== */
+@media (max-width: 992px) {
+    body { display: block; }
+    .sidebar {
+        right: -100%; /* مخفي خارج الشاشة */
+        width: 80%;
+        transition: 0.5s ease-in-out;
+    }
+    .sidebar.active { right: 0; } /* يظهر عند الضغط */
+    .main-wrapper {
+        margin-right: 0;
+        width: 100%;
+        padding: 60px 15px 30px;
+    }
+    #mobile-toggle { display: block; }
+    .header-title { font-size: 2.2rem; }
+    .control-bar {
+        flex-direction: column;
+        border-radius: 20px;
+        padding: 20px;
+    }
 }
