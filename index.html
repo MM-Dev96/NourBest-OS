@@ -92,7 +92,7 @@
             <div class="brand-sub">ULTIMATE EDITION</div>
         </div>
 <nav class="system-nav">
-    <div class="nav-item active"><i class="fas fa-th-large"></i> "وجهتك القادمة تبدأ من هنا"</div>
+   <div class="nav-item active"><i class="fas fa-th-large"></i> الرئيسية</div>
     <div class="nav-item"><i class="fas fa-plane-departure"></i> جدول الرحلات</div>
     <div class="nav-item"><i class="fas fa-map-marked-alt"></i> خريطة النودز</div>
     <div class="nav-item"><i class="fas fa-history"></i> سجل العمليات</div>
@@ -100,7 +100,7 @@
 </nav>
         <div class="system-widgets">
             <div class="widget" id="weather-widget">
-                <i class="fas fa-cloud-sun"></i> <span>24°C - الرياض</span>
+                <i class="fas fa-sync-alt fa-spin"></i> <span>جاري جلب الطقس...</span>
             </div>
             <div class="widget" id="currency-widget">
                 <i class="fas fa-coins"></i> <span>1 USD = 3.75 SAR</span>
@@ -130,24 +130,32 @@
             </div>
         </div>
 
+        <div class="bookings-section">
+            <div class="fav-title">✈️ حجوزاتي الحالية</div>
+            <div id="bookings-list">
+                <div style="text-align:center; color:#555; margin-top:20px;">جاري تحميل التذاكر...</div>
+            </div>
+        </div>
+
         <div class="log-title">> سياقية الأداء:</div>
         <div class="terminal-window" id="terminal"></div>
     </aside>
 
     <main class="main-wrapper">
-        <div id="google_translate_element"></div>
+        <div id="google_translate_element"><i class="fas fa-language" style="color:var(--neon-blue); margin-right: 8px;"></i></div>
         
         <div class="header-section">
-            <h1 class="header-title">"وجهتك القادمة تبدأ من هنا"</h1>
-            <p class="header-desc">
-      "استكشف آلاف الرحلات والفنادق حول العالم بأفضل الأسعار المضمونة."
-            </p>
-        </div>
+    <h1 class="header-title">وجهتك القادمة تبدأ من هنا</h1>
+    <p class="header-desc">
+        استكشف آلاف الرحلات والفنادق حول العالم بأفضل الأسعار المضمونة.
+    </p>
+</div>
 
         <div class="control-bar">
             <div class="search-wrapper">
                 <span style="font-size:1.2rem; color: var(--neon-blue);">🔍</span>
                 <input type="text" class="search-input" id="search-box" list="airports-list" placeholder="ابحث عن مطار، وجهة، أو فندق..." onkeyup="filterGrid()">
+                <div id="search-suggestions" class="suggestions-box"></div>
                 <datalist id="airports-list">
                     <option value="JED - مطار الملك عبدالعزيز الدولي">
                     <option value="RUH - مطار الملك خالد الدولي">
@@ -186,11 +194,10 @@
     <script src="./app.js"></script>
     <button id="back-to-top" class="back-to-top"><i class="fas fa-chevron-up"></i></button>
     <script type="text/javascript">
-        function googleTranslateElementInit() {
+  function googleTranslateElementInit() {
             new google.translate.TranslateElement({
                 pageLanguage: 'ar',
                 includedLanguages: 'en,zh-CN,es,fr,de,ja,ru,pt,it,ko,tr,hi,bn,te,mr,ta,ur,gu,kn,ml,pa,th,id,nl,el,pl,sv,no,da,fi,he,cs,hu,ro,uk,bg,hr,sk,sl,et,lt,lv,ms,sq,bs,mk,sr,hy,ka,az,uz,kk,tk,ky,tg,mn,km,lo,my,ne,si,am,sw,zu,xh,yo,ig,ha,af,is,ga,mt,cy,gd,gl,eu,ca,fy,lb,eo,la',
-                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
                 autoDisplay: false
             }, 'google_translate_element');
         }

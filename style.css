@@ -7,14 +7,11 @@
     --neon-red: #ff2a2a;
     --neon-gold: #ffd700;
     --neon-purple: #bc13fe;
-    --sidebar-width: 340px;
     --card-radius: 20px;
     --font-main: 'Tajawal', sans-serif;
     --font-tech: 'Orbitron', sans-serif;
 }
-
 * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
-
 body {
     background-color: var(--bg-deep);
     color: #fff;
@@ -24,7 +21,6 @@ body {
     min-height: 100vh;
     display: flex;
 }
-
 /* خلفية المطر الرقمي */
 canvas#matrix-bg {
     position: fixed; top: 0; left: 0;
@@ -38,8 +34,7 @@ canvas#matrix-bg {
     box-shadow: 0 0 10px var(--neon-green); animation: pulse-green 2s infinite;
 }
 @keyframes pulse-green { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; }
- }
-
+ } 
   /* شريط الحالة العلوي - لعرض الوقت والاتصال */
 .top-status-bar {
     position: fixed; top: 0; left: 0; width: 100%; height: 30px;
@@ -49,7 +44,6 @@ canvas#matrix-bg {
 }
 ::-webkit-scrollbar { width: 6px; background: #000; }
 ::-webkit-scrollbar-thumb { background: var(--neon-blue); border-radius: 3px; }
-
 /* ==================== شاشة التحميل ==================== */
 #loader-screen {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -76,14 +70,7 @@ canvas#matrix-bg {
 @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; text-shadow: 0 0 20px var(--neon-blue); } 100% { opacity: 0.5; } }
 
 /* ==================== اللوحة الجانبية ==================== */
-.sidebar {
-    width: var(--sidebar-width); height: 100vh;
-    background: rgba(5, 10, 20, 0.95);
-    border-left: 2px solid var(--neon-blue);
-    position: fixed; right: 0; top: 0; z-index: 1000;
-    padding: 50px 20px 20px; display: flex; flex-direction: column;
-    backdrop-filter: blur(10px); box-shadow: -5px 0 30px rgba(0,0,0,0.8);
-}
+
 .brand-box { text-align: center; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 15px; }
 .brand-title { font-family: var(--font-tech); font-size: 1.8rem; color: #fff; margin: 0; letter-spacing: 2px; }
 .brand-sub { color: var(--neon-blue); font-size: 0.7rem; letter-spacing: 4px; }
@@ -201,10 +188,6 @@ canvas#matrix-bg {
 }
 
 /* ==================== المحتوى الرئيسي ==================== */
-.main-wrapper {
-    margin-right: var(--sidebar-width); width: calc(100% - var(--sidebar-width));
-    padding: 60px 30px 30px; position: relative;
-}
 .header-section {
     text-align: center;
     margin: 60px 0 30px; /* مسافة متوازنة بالأعلى والأسفل */
@@ -303,8 +286,7 @@ canvas#matrix-bg {
 }
 .qr-placeholder { font-size: 2.5rem; color: #000; }
 
-/* ==================== 5. تصميم زر الترجمة (الكبسولة النيون) ==================== */
-/* تم تحسين هذا الجزء ليدعم قائمة اللغات الطويلة بشكل احترافي */
+/* ==================== تحديث واجهة الترجمة للنمط العصري (2025) ==================== */
 
 #google_translate_element {
     position: fixed !important;
@@ -312,59 +294,70 @@ canvas#matrix-bg {
     left: 25px !important;
     z-index: 2147483647 !important;
     
-    background: rgba(0, 0, 0, 0.9) !important;
-    border: 2px solid var(--neon-blue) !important;
-    border-radius: 50px !important;
-    padding: 5px 15px !important;
+    /* خلفية زجاجية عصرية بدلاً من النيون */
+    background: rgba(255, 255, 255, 0.08) !important;
+    backdrop-filter: blur(15px) !important;
+    -webkit-backdrop-filter: blur(15px) !important;
     
-    box-shadow: 0 0 15px rgba(0, 243, 255, 0.3) !important;
-    backdrop-filter: blur(5px);
+    /* حدود هادئة وراقية */
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-radius: 16px !important;
+    padding: 8px 16px !important;
     
-    min-width: 160px;
-    height: 45px;
+    /* ظلال ناعمة (Depth Shadow) وليست توهج */
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.24) !important;
+    
     display: flex !important;
     align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* تأثير التوهج عند تمرير الماوس على كبسولة الترجمة */
 #google_translate_element:hover {
-    box-shadow: 0 0 25px var(--neon-blue) !important;
-    transform: scale(1.05);
+    background: rgba(255, 255, 255, 0.12) !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
+    transform: translateY(-4px);
 }
 
-/* تنسيق القائمة المنسدلة للغات */
+/* تنسيق القائمة المنسدلة للغات بنمط نظيف */
 .goog-te-combo {
     background: transparent !important;
-    color: var(--neon-blue) !important;
+    color: #ffffff !important;
     border: none !important;
     outline: none !important;
     font-family: var(--font-main) !important;
-    font-weight: bold !important;
+    font-weight: 500 !important;
     font-size: 14px !important;
     cursor: pointer !important;
-    width: 100% !important;
-    margin: 0 !important;
+    padding: 4px 8px !important;
+    appearance: none;
 }
 
-/* تنسيق الخيارات داخل القائمة (للمتصفحات التي تدعمها) */
+/* إخفاء شعار جوجل والعناصر القديمة تماماً */
+.goog-logo-link, .goog-te-gadget span, .goog-te-banner-frame, .goog-te-gadget-icon {
+    display: none !important;
+}
+
+.goog-te-gadget {
+    color: transparent !important;
+    font-size: 0 !important;
+}
+
+/* تنسيق الخيارات داخل القائمة لتناسب الخلفية الداكنة للمتصفح */
 .goog-te-combo option {
-    background-color: var(--bg-deep) !important;
-    color: #fff !important;
-    padding: 10px !important;
+    background-color: #1a1c1e !important;
+    color: #ffffff !important;
+    padding: 12px !important;
 }
 
-/* إخفاء إضافات جوجل غير الضرورية للحفاظ على نظافة الـ OS */
-.goog-te-gadget-icon { display: none !important; }
-.goog-te-gadget-simple { background: transparent !important; border: none !important; padding: 0 !important; }
-.goog-te-gadget span { display: none !important; }
-.goog-te-banner-frame { display: none !important; }
-.goog-logo-link { display: none !important; }
-.goog-te-gadget { color: transparent !important; }
-
-/* تصحيح موضع الجسم عند ظهور شريط الترجمة */
+/* تصحيح موضع الجسم لضمان عدم اهتزاز الصفحة */
 body { top: 0 !important; }
+
+/* حل مشكلة الشبكة البيضاء المزعجة وتغييرها للنمط الداكن */
+.goog-te-menu-frame {
+    border-radius: 12px !important;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.4) !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+}
 
 /* التذييل (Footer) */
 .main-footer { 
@@ -453,7 +446,7 @@ body { top: 0 !important; }
     cursor: pointer;
 }
 
-/* زر العودة للأعلى */
+/* زر العودة للأعلى - بتصميم عصري هادئ */
 .back-to-top {
     position: fixed;
     bottom: 85px;
@@ -461,15 +454,24 @@ body { top: 0 !important; }
     width: 45px;
     height: 45px;
     border-radius: 50%;
-    background: var(--glass-panel);
-    border: 1px solid var(--neon-blue);
-    color: var(--neon-blue);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
     cursor: pointer;
     display: none;
     align-items: center;
     justify-content: center;
     z-index: 1000;
-    /* تحسين مظهر ويدجت الطقس */
+    transition: 0.3s;
+}
+
+.back-to-top:hover {
+    background: var(--neon-blue);
+    color: #000;
+}
+
+/* تحسين مظهر ويدجت الطقس LIVE */
 #weather-widget {
     cursor: help;
     position: relative;
@@ -486,61 +488,219 @@ body { top: 0 !important; }
     font-weight: bold;
     animation: pulse 1s infinite;
 }
-}
 
-/* ==================== استجابة الشاشات (Responsiveness) ==================== */
-@media (max-width: 992px) {
-    body { display: block; }
-    .sidebar {
-        right: -100%; /* مخفي خارج الشاشة */
-        width: 80%;
-        transition: 0.5s ease-in-out;
-    }
-    .sidebar.active { right: 0; } /* يظهر عند الضغط */
-    .main-wrapper {
-        margin-right: 0;
-        width: 100%;
-        padding: 60px 15px 30px;
-    }
-    #mobile-toggle { display: block; }
-    .header-title { font-size: 2.2rem; }
-    .control-bar {
-        flex-direction: column;
-        border-radius: 20px;
-        padding: 20px;
-    }
-}
-/* تصميم خيارات الحجز التسلسلي (Professional Stepper) */
+/* تصميم خيارات الحجز التسلسلي - النمط العصري المستقبلي */
 .step-options {
     display: flex;
     flex-direction: column;
     gap: 15px;
     margin-top: 25px;
 }
+
 .opt-btn {
     padding: 20px;
     background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(0, 243, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     color: #fff;
     border-radius: 18px;
     cursor: pointer;
-    transition: 0.3s;
+    transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     text-align: right;
     font-family: var(--font-main);
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
+
 .opt-btn:hover {
-    background: rgba(0, 243, 255, 0.1);
+    background: rgba(255, 255, 255, 0.08);
     border-color: var(--neon-blue);
-    transform: translateX(-5px); /* تأثير انزلاق ناعم */
+    transform: translateX(-5px);
 }
+
 .summary-box {
-    background: rgba(0, 0, 0, 0.4);
+    background: rgba(0, 0, 0, 0.6);
     padding: 30px;
     border-radius: 25px;
-    border: 1px solid var(--neon-blue);
+    border: 1px solid rgba(0, 243, 255, 0.3);
     text-align: right;
     line-height: 2.2;
+    backdrop-filter: blur(10px);
+}
+/* ==================== تنسيق صندوق الاقتراحات الذكي (Vogue Style) ==================== */
+.search-wrapper { position: relative; flex-grow: 1; }
+
+.suggestions-box {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    width: 100%;
+    background: rgba(15, 25, 40, 0.9); /* خلفية داكنة فخمة */
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    z-index: 5000;
+    display: none; /* يتم إظهاره عبر JS */
+    box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+    overflow: hidden;
+}
+
+.suggestion-item {
+    padding: 15px 20px;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    color: #eee;
+}
+
+.suggestion-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    padding-right: 25px; /* تأثير حركة ناعم للمسافر */
+    color: var(--neon-blue);
+}
+/* تنسيق قسم الحجوزات في السايدبار */
+.bookings-section {
+    margin-top: 20px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 15px;
+    border: 1px dashed rgba(255, 255, 255, 0.1);
+}
+
+.booking-card {
+    background: rgba(0, 0, 0, 0.4);
+    border-right: 4px solid var(--neon-green);
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    font-size: 0.8rem;
+}
+
+.booking-id { color: #888; font-size: 0.7rem; margin-bottom: 5px; }
+.booking-city { font-weight: bold; color: #fff; margin-bottom: 8px; }
+.booking-footer { display: flex; justify-content: space-between; font-size: 0.75rem; }
+/* ==================== تنسيق ملصق العروض الساخنة (Hot Deals) ==================== */
+.hot-deal-tag {
+    position: absolute;
+    top: 15px;
+    right: -35px;
+    background: linear-gradient(45deg, #ff2a2a, #ff8c00);
+    color: white;
+    padding: 5px 40px;
+    font-size: 0.7rem;
+    font-weight: bold;
+    transform: rotate(45deg);
+    box-shadow: 0 5px 15px rgba(255, 42, 42, 0.4);
+    z-index: 10;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.price-old {
+    text-decoration: line-through;
+    color: #555;
+    font-size: 0.9rem;
+    margin-left: 8px;
+}
+
+.price-new {
+    color: var(--neon-green) !important;
+    font-weight: 900;
+}
+.suggestion-item small {
+    background: rgba(0, 243, 255, 0.1);
+    color: var(--neon-blue);
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 0.65rem;
+    font-weight: bold;
+}
+/* ==================== هندسة الواجهة العصرية (Modern Integrated UI) ==================== */
+
+/* الصفحة الرئيسية - واسعة ومنظمة */
+.main-wrapper {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 100px 30px 50px;
+    transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* القائمة الجانبية (The Premium Sidebar) */
+.sidebar {
+    position: fixed;
+    top: 0;
+    right: -350px; /* مخفية تماماً خارج الشاشة بشكل افتراضي */
+    width: 350px;
+    height: 100vh;
+    background: rgba(13, 17, 23, 0.95);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    z-index: 10000;
+    padding: 40px 25px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: -10px 0 50px rgba(0, 0, 0, 0.8);
+    transition: all 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* عندما تصبح القائمة نشطة */
+.sidebar.active {
+    right: 0;
+}
+
+/* الطبقة الشفافة خلف القائمة (Overlay) */
+.sidebar-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(8px);
+    z-index: 9999;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.sidebar-overlay.active {
+    display: block;
+    opacity: 1;
+}
+
+/* تصميم عناصر القائمة بشكل تطبيقات السفر الراقية */
+.user-profile-box {
+    background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 100%);
+    border-radius: 24px;
+    padding: 25px;
+    margin-bottom: 30px;
+    border: 1px solid rgba(255,255,255,0.1);
+    text-align: center;
+}
+
+.nav-item {
+    padding: 16px 20px;
+    border-radius: 16px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    color: rgba(255,255,255,0.65);
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+.nav-item:hover, .nav-item.active {
+    background: rgba(255, 243, 255, 0.05);
+    color: var(--neon-blue);
+    transform: scale(1.02);
+}
+
+/* استجابة الشاشات للجوال */
+@media (max-width: 768px) {
+    .sidebar { width: 100%; right: -100%; } /* تغطي الشاشة في الجوال فقط عند الفتح */
+    .header-title { font-size: 1.5rem !important; }
+    .main-wrapper { padding: 80px 15px 30px; }
 }
