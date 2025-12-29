@@ -114,18 +114,67 @@ canvas#matrix-bg {
     color: var(--neon-blue);
     width: 20px;
 }
-.pilot-profile {
-    display: flex; align-items: center; gap: 12px; padding: 12px;
-    background: rgba(0, 243, 255, 0.05); border-radius: 15px; margin-bottom: 15px;
+.user-profile-box {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 25px;
     border: 1px solid rgba(0, 243, 255, 0.1);
 }
-.pilot-avatar {
-    width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--neon-blue);
-    display: flex; justify-content: center; align-items: center; color: var(--neon-blue);
-}
-.loyalty-bar { width: 100%; height: 4px; background: #222; border-radius: 5px; margin-top: 5px; overflow: hidden; }
-.loyalty-bar .progress { height: 100%; background: var(--neon-blue); box-shadow: 0 0 10px var(--neon-blue); }
 
+.user-main {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.user-avatar-circle {
+    width: 50px;
+    height: 50px;
+    background: var(--bg-deep);
+    border: 1.5px solid var(--neon-blue);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--neon-blue);
+    font-size: 1.2rem;
+}
+
+.welcome-text {
+    font-size: 0.8rem;
+    color: #888;
+}
+
+.user-display-name {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #fff;
+}
+
+.auth-links {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    font-size: 0.75rem;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.auth-btn {
+    color: var(--neon-blue);
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.auth-btn:hover {
+    text-shadow: 0 0 10px var(--neon-blue);
+}
+
+.auth-btn.secondary {
+    color: #fff;
+}
 .systems-hub { margin-bottom: 20px; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 10px; border: 1px solid #333; }
 .hub-icons { display: flex; justify-content: space-around; font-size: 1.2rem; color: #555; }
 .hub-icons i:hover { color: var(--neon-blue); cursor: pointer; }
@@ -435,4 +484,38 @@ body { top: 0 !important; }
         border-radius: 20px;
         padding: 20px;
     }
+}
+/* تصميم خيارات الحجز التسلسلي (Professional Stepper) */
+.step-options {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 25px;
+}
+.opt-btn {
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(0, 243, 255, 0.1);
+    color: #fff;
+    border-radius: 18px;
+    cursor: pointer;
+    transition: 0.3s;
+    text-align: right;
+    font-family: var(--font-main);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.opt-btn:hover {
+    background: rgba(0, 243, 255, 0.1);
+    border-color: var(--neon-blue);
+    transform: translateX(-5px); /* تأثير انزلاق ناعم */
+}
+.summary-box {
+    background: rgba(0, 0, 0, 0.4);
+    padding: 30px;
+    border-radius: 25px;
+    border: 1px solid var(--neon-blue);
+    text-align: right;
+    line-height: 2.2;
 }
