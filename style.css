@@ -1,731 +1,1062 @@
-/* ==================== المتغيرات والإعدادات ==================== */
+/* ==================== المتغيرات والإعدادات الاحترافية (Travel OS 2025) ==================== */
 :root {
-    --bg-deep: #020408;
-    --glass-panel: rgba(10, 20, 35, 0.9);
-    --neon-blue: #00f3ff;
-    --neon-green: #0aff0a;
-    --neon-red: #ff2a2a;
-    --neon-gold: #ffd700;
-    --neon-purple: #bc13fe;
-    --card-radius: 20px;
+    /* لوحة الألوان السيادية */
+    --primary-blue: #0052D4; 
+    --sky-gradient: linear-gradient(135deg, #0052D4 0%, #4364F7 50%, #6FB1FC 100%);
+    --bg-modern: #f8fafc; /* لون أفتح قليلاً لإبراز البطاقات البيضاء */
+    --white-glass: rgba(255, 255, 255, 0.85);
+    --accent-gold: #fbbf24; 
+    --text-dark: #0f172a; /* نيلي غامق جداً للوضوح العالي */
+    --text-muted: #64748b;
+    
+    /* هندسة الأبعاد */
+    --card-radius: 28px;
     --font-main: 'Tajawal', sans-serif;
-    --font-tech: 'Orbitron', sans-serif;
+    --shadow-premium: 0 20px 50px rgba(0, 82, 212, 0.08);
+    
+    /* ألوان الحالة الوظيفية */
+    --status-success: #10b981;
+    --status-error: #ef4444;
 }
-* { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
-body {
-    background-color: var(--bg-deep);
-    color: #fff;
-    font-family: var(--font-main);
+
+* { 
+    box-sizing: border-box; 
     margin: 0; padding: 0;
+    outline: none; 
+    -webkit-tap-highlight-color: transparent; 
+}
+
+body {
+    background-color: var(--bg-modern);
+    color: var(--text-dark);
+    font-family: var(--font-main);
     overflow-x: hidden;
     min-height: 100vh;
-    display: block;
+    line-height: 1.6;
 }
-/* خلفية المطر الرقمي */
+
+/* محرك الماتريكس السماوي الخفي */
 canvas#matrix-bg {
     position: fixed; top: 0; left: 0;
     width: 100%; height: 100%;
-    z-index: -1; opacity: 0.15;
+    z-index: -1; 
+    opacity: 0.04; /* شفافية متناهية لعدم تشتيت النظر */
     pointer-events: none;
 }
+
+/* شريط الحالة العلوي (StatusBar) - نمط تطبيقات الآيفون */
+.top-status-bar {
+    position: fixed; top: 0; left: 0; width: 100%; height: 40px;
+    background: rgba(255, 255, 255, 0.7); 
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-bottom: 1px solid rgba(0, 82, 212, 0.05);
+    z-index: 9000; 
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0 30px; 
+    font-size: 0.75rem; color: var(--text-muted);
+    font-weight: 700;
+}
+
 .pulse-dot {
-    height: 8px;
-    width: 8px;
-    background-color: var(--neon-green);
+    height: 8px; width: 8px;
+    background-color: var(--status-success);
     border-radius: 50%;
     display: inline-block;
-    margin-left: 8px;
-    box-shadow: 0 0 12px var(--neon-green);
+    margin-left: 10px;
+    box-shadow: 0 0 12px var(--status-success);
     animation: pulse-green 2s infinite ease-in-out;
 }
 
 @keyframes pulse-green {
-    0%, 100% { opacity: 0.4; transform: scale(0.9); }
-    50% { opacity: 1; transform: scale(1.1); }
+    0%, 100% { transform: scale(0.8); opacity: 0.5; }
+    50% { transform: scale(1.2); opacity: 1; }
 }
-  /* شريط الحالة العلوي - لعرض الوقت والاتصال */
-.top-status-bar {
-    position: fixed; top: 0; left: 0; width: 100%; height: 30px;
-    background: rgba(0, 0, 0, 0.8); border-bottom: 1px solid rgba(0, 243, 255, 0.2);
-    z-index: 2000; display: flex; justify-content: space-between; align-items: center;
-    padding: 0 20px; font-family: var(--font-tech); font-size: 0.65rem; color: #888;
-}
-::-webkit-scrollbar { width: 6px; background: #000; }
-::-webkit-scrollbar-thumb { background: var(--neon-blue); border-radius: 3px; }
-/* ==================== شاشة التحميل ==================== */
+
+/* ==================== واجهة الإقلاع (The Flight Splash) ==================== */
 #loader-screen {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: #000; z-index: 99999;
+    background: var(--sky-gradient); 
+    z-index: 100000;
     display: flex; flex-direction: column; justify-content: center; align-items: center;
-    transition: opacity 1s ease-out;
+    transition: all 1s cubic-bezier(0.65, 0, 0.35, 1);
 }
+
 .loader-ring {
-    width: 120px; height: 120px; border: 4px solid transparent;
-    border-top-color: var(--neon-blue); border-radius: 50%;
-    animation: spin 1s linear infinite; margin-bottom: 20px;
-    box-shadow: 0 0 20px var(--neon-blue);
+    font-size: 90px;
+    color: #fff;
+    margin-bottom: 25px;
+    filter: drop-shadow(0 15px 30px rgba(0,0,0,0.2));
+    animation: planeTakeoff 2.5s infinite cubic-bezier(0.45, 0.05, 0.55, 0.95);
 }
-.loader-ring::before {
-    content: ""; position: absolute; top: 10px; left: 10px; right: 10px; bottom: 10px;
-    border: 4px solid transparent; border-top-color: var(--neon-purple);
-    border-radius: 50%; animation: spin 2s linear infinite;
+
+@keyframes planeTakeoff {
+    0% { transform: translateY(30px) scale(0.8) rotate(0deg); opacity: 0; }
+    30% { transform: translateY(0) scale(1) rotate(-15deg); opacity: 1; }
+    100% { transform: translateY(-600px) translateX(600px) scale(1.3) rotate(-35deg); opacity: 0; }
 }
+
 .loader-text {
-    font-family: var(--font-tech); letter-spacing: 5px;
-    color: var(--neon-blue); animation: pulse 1.5s infinite;
+    font-weight: 900;
+    letter-spacing: 4px;
+    color: rgba(255, 255, 255, 0.9); 
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    animation: textFade 1.5s infinite alternate;
 }
-@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-@keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; text-shadow: 0 0 20px var(--neon-blue); } }
 
-/* ==================== اللوحة الجانبية ==================== */
+@keyframes textFade { from { opacity: 0.3; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
 
-.brand-box { text-align: center; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 15px; }
-.brand-title { font-family: var(--font-tech); font-size: 1.8rem; color: #fff; margin: 0; letter-spacing: 2px; }
-.brand-sub { color: var(--neon-blue); font-size: 0.7rem; letter-spacing: 4px; }
-/* بروفايل القائد والأنظمة الحقيقية في السايدبار */
-.system-nav {
-    margin: 15px 0;
+/* تخصيص شريط التمرير بنمط عصري */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg-modern); }
+::-webkit-scrollbar-thumb { 
+    background: var(--primary-blue); 
+    border-radius: 20px; 
+}
+/* ==================== اللوحة الجانبية الفاخرة (Premium Sidebar 2025) ==================== */
+.sidebar {
+    background: var(--white-glass);
+    backdrop-filter: blur(30px) saturate(180%);
+    -webkit-backdrop-filter: blur(30px) saturate(180%);
+    border-left: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: -15px 0 45px rgba(0, 82, 212, 0.05);
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    z-index: 10000;
 }
-.auth-links {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-    font-size: 0.7rem;
-    padding-top: 15px;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-    letter-spacing: 1px;
+
+/* صندوق العلامة التجارية - تصميم "تذكرة الدرجة الأولى" */
+.brand-box { 
+    text-align: center; 
+    margin-bottom: 35px; 
+    padding: 30px 20px;
+    background: var(--sky-gradient);
+    border-radius: 0 0 40px 40px;
+    color: white;
+    box-shadow: 0 10px 30px rgba(0, 82, 212, 0.2);
+    position: relative;
+    overflow: hidden;
 }
-.auth-btn {
-    color: var(--neon-blue);
-    text-decoration: none;
-    transition: 0.3s;
+
+.brand-box::before {
+    content: ""; position: absolute; top: -50%; left: -50%;
+    width: 200%; height: 200%; background: rgba(255,255,255,0.1);
+    transform: rotate(35deg); pointer-events: none;
 }
-.auth-btn:hover {
-    text-shadow: 0 0 10px var(--neon-blue);
+
+.brand-title { 
+    font-weight: 900; font-size: 1.8rem; 
+    margin: 0; letter-spacing: -1px;
+    text-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
-.auth-btn.secondary {
-    color: #fff;
+
+.brand-sub { 
+    color: rgba(255, 255, 255, 0.85); 
+    font-size: 0.7rem; 
+    letter-spacing: 3px; 
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-top: 5px;
 }
+
+/* مركز الأنظمة - Hub Icons */
 .systems-hub {
     margin-bottom: 25px;
-    padding: 15px;
-    background: rgba(255, 255, 255, 0.02);
-    border-radius: 18px;
-    border: 1px solid rgba(0, 243, 255, 0.1);
-    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.3);
-}
-.hub-icons { display: flex; justify-content: space-around; font-size: 1.2rem; color: #555; }
-.hub-icons i:hover { color: var(--neon-blue); cursor: pointer; }
-.favorites-section {
-    flex-grow: 1;
-    margin-bottom: 25px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 18px;
-    padding: 15px;
-    background: rgba(255, 255, 255, 0.01);
-    backdrop-filter: blur(5px);
-    overflow-y: auto;
-}
-.fav-title { font-size: 0.9rem; color: var(--neon-gold); margin-bottom: 10px; display: flex; justify-content: space-between; }
-.fav-item {
-    background: rgba(255, 215, 0, 0.03);
-    padding: 12px;
-    border-radius: 12px;
-    margin-bottom: 8px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: var(--card-radius);
+    border: 1px solid rgba(255, 255, 255, 0.8);
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.02);
+}
+
+.hub-icons i { 
+    color: var(--primary-blue); 
+    font-size: 1.2rem;
+    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+    cursor: pointer;
+}
+
+.hub-icons i:hover { 
+    transform: scale(1.3) translateY(-3px); 
+    color: var(--accent-gold); 
+    text-shadow: 0 5px 15px rgba(251, 191, 36, 0.3);
+}
+
+/* قسم المفضلة - بنمط القائمة النظيفة */
+.favorites-section {
+    background: transparent;
+    padding: 0 10px;
+    flex-grow: 1;
+}
+
+.fav-title { 
+    color: var(--text-dark); 
+    font-weight: 800; 
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+    padding-right: 10px;
+    display: flex;
     align-items: center;
-    font-size: 0.85rem;
-    border: 1px solid rgba(255, 215, 0, 0.1);
-    transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    gap: 8px;
+}
+
+.fav-title::before {
+    content: ""; width: 4px; height: 18px; 
+    background: var(--primary-blue); border-radius: 10px;
+}
+
+.fav-item {
+    background: #ffffff;
+    padding: 14px 18px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+    border: 1px solid #f1f5f9;
+    transition: 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.02);
 }
 
 .fav-item:hover {
-    background: rgba(255, 215, 0, 0.08);
-    border-color: var(--neon-gold);
-    transform: scale(1.02);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    border-color: var(--primary-blue);
+    background: #f8fbff;
+    transform: translateX(-5px);
+    box-shadow: 0 10px 20px rgba(0, 82, 212, 0.06);
 }
-.fav-remove { color: var(--neon-red); cursor: pointer; font-weight: bold; padding: 0 5px; }
 
-.log-title { font-weight:bold; color:var(--neon-blue); margin-bottom:5px; }
+/* نافذة الأوامر - تحولت إلى "سجل نشاط" رقمي (Activity Log) */
 .terminal-window {
     height: 140px;
-    background: rgba(0, 0, 0, 0.8);
-    border: 1px solid rgba(0, 243, 255, 0.1);
-    border-radius: 14px;
-    padding: 15px;
+    background: #0f172a; /* لون نيلي عميق جداً */
+    border-radius: 24px;
+    padding: 18px;
+    font-family: 'Consolas', monospace;
+    font-size: 0.7rem;
+    color: #38bdf8; /* أزرق رقمي مضيء */
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    margin-top: auto;
+    box-shadow: inset 0 2px 10px rgba(0,0,0,0.2);
     overflow-y: auto;
-    font-family: 'Courier New', monospace;
-    font-size: 0.75rem;
-    color: var(--neon-green);
-    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5);
 }
 
-/* ==================== المحتوى الرئيسي ==================== */
+/* تخصيص سكرول بار التيرمينال */
+.terminal-window::-webkit-scrollbar { width: 3px; }
+.terminal-window::-webkit-scrollbar-thumb { background: rgba(56, 189, 248, 0.3); border-radius: 10px; }
+
+/* ==================== المحتوى الرئيسي الفاخر (Modern Travel UI 2025) ==================== */
+
+/* قسم العنوان والترحيب */
 .header-section {
     text-align: center;
-    margin: 60px 0 30px; /* مسافة متوازنة بالأعلى والأسفل */
-    padding: 0 20px;
+    margin: 60px 0 50px;
+    padding: 0 25px;
 }
 
 .header-title {
-   font-size: clamp(1.8rem, 5vw, 2.5rem);
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
     margin: 0;
-    color: #ffffff; /* لون أبيض صريح لسهولة القراءة */
+    color: var(--primary-blue);
     font-weight: 900;
-    letter-spacing: -1px; /* لمسة عصرية لتقارب الحروف */
-    text-shadow: 0 4px 15px rgba(0, 243, 255, 0.3); /* توهج نيون خفيف لا يؤثر على وضوح النص */
+    letter-spacing: -2px;
+    line-height: 1.1;
+    /* تأثير تدريجي خفيف على النص */
+    background: var(--sky-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
+
+/* شريط التحكم الذكي - تصميم "الجزيرة العائمة" (Floating Island) */
 .control-bar {
-    background: var(--glass-panel); border: 1px solid var(--neon-blue);
-    border-radius: 50px; padding: 15px 30px; margin-bottom: 40px;
-    display: flex; gap: 20px; align-items: center;
-    box-shadow: 0 0 20px rgba(0, 243, 255, 0.1);
+    background: #ffffff; 
+    border: 1px solid rgba(0, 82, 212, 0.08);
+    border-radius: 24px;
+    padding: 10px 15px; 
+    margin: 0 auto 60px;
+    max-width: 900px;
+    display: flex; 
+    gap: 12px; 
+    align-items: center;
+    box-shadow: 0 15px 40px rgba(0, 82, 212, 0.06);
+    transition: 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
-.control-bar:hover {
-    border-color: var(--neon-blue);
-    box-shadow: 0 0 30px rgba(0, 243, 255, 0.15);
-    transform: translateY(-2px);
-    transition: 0.4s;
+
+.control-bar:focus-within {
+    transform: translateY(-4px) scale(1.01);
+    box-shadow: 0 20px 50px rgba(0, 82, 212, 0.1);
+    border-color: var(--primary-blue);
 }
+
 .search-input {
-    flex-grow: 1; background: transparent; border: none;
-    color: #fff; font-size: 1.1rem; font-family: var(--font-main);
-    border-bottom: 1px solid #555; padding: 5px;
+    flex-grow: 1; 
+    background: transparent; 
+    border: none;
+    color: var(--text-dark); 
+    font-size: 1.1rem; 
+    font-family: var(--font-main);
+    padding: 12px;
+    font-weight: 600;
 }
+
+.search-input::placeholder { color: #94a3b8; font-weight: 500; }
+
+/* الفلاتر السريعة بنمط الأيقونات المضيئة */
 .filter-select {
-   
-   background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(10px); color: var(--neon-blue); border: 1px solid rgba(0, 243, 255, 0.3);
-    padding: 8px 15px; border-radius: 20px; cursor: pointer; font-weight: bold;
+    background: #f1f5f9; 
+    color: var(--primary-blue); 
+    border: 1px solid transparent;
+    padding: 12px 20px; 
+    border-radius: 16px; 
+    cursor: pointer; 
+    font-weight: 800;
+    font-size: 0.9rem;
+    transition: 0.3s;
 }
- /* أزرار البحث السريع عن طيران وفنادق */
-.quick-filters { display: flex; gap: 10px; margin: 0 15px; }
+
+.filter-select:hover { background: #e2e8f0; }
+
+.quick-filters { display: flex; gap: 10px; }
 .quick-filters button {
-    width: 38px; height: 38px; border-radius: 50%; border: 1px solid #333;
-    background: transparent; color: #fff; cursor: pointer; transition: 0.3s;
+    width: 46px; height: 46px; 
+    border-radius: 14px; 
+    border: 1px solid #e2e8f0;
+    background: #fff; 
+    color: var(--text-muted); 
+    cursor: pointer; 
+    transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex; align-items: center; justify-content: center;
 }
-.quick-filters button:hover { border-color: var(--neon-blue); color: var(--neon-blue); }
-/* البطاقات */
+
+.quick-filters button:hover { 
+    background: var(--primary-blue); 
+    color: #fff; 
+    border-color: var(--primary-blue);
+    transform: rotate(8deg);
+}
+
+/* شبكة الرحلات الاحترافية */
 .trips-grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 25px; padding-bottom: 60px;
+    display: grid; 
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 35px; 
+    padding: 0 10px 100px;
 }
+
+/* بطاقة الرحلة - تصميم "البريميوم" */
 .trip-card {
-    background: var(--glass-panel); border: 1px solid rgba(255,255,255,0.05);
-    border-radius: var(--card-radius); padding: 20px; position: relative;
-    transition: 0.3s; overflow: hidden; display: flex; flex-direction: column;
+    background: #ffffff; 
+    border: 1px solid rgba(0, 0, 0, 0.03);
+    border-radius: 32px; 
+    padding: 12px; 
+    position: relative;
+    transition: 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); 
+    display: flex; 
+    flex-direction: column;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.02);
 }
-.trip-card:hover { transform: translateY(-10px); border-color: var(--neon-blue); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
 
+.trip-card:hover { 
+    transform: translateY(-15px); 
+    box-shadow: 0 30px 60px rgba(0, 82, 212, 0.12);
+    border-color: rgba(0, 82, 212, 0.1);
+}
+
+/* زر المفضلة - بنمط القلب العائم */
 .fav-btn {
-    position: absolute; top: 15px; left: 15px;
-    background: rgba(0,0,0,0.5); border: 1px solid #555;
-    color: #555; width: 35px; height: 35px; border-radius: 50%;
-    cursor: pointer; display: flex; justify-content: center; align-items: center;
-    font-size: 1.2rem; transition: 0.3s;
+    position: absolute; top: 25px; left: 25px;
+    background: rgba(255, 255, 255, 0.9); 
+    backdrop-filter: blur(10px);
+    border: none;
+    color: #cbd5e1; 
+    width: 44px; height: 44px; 
+    border-radius: 15px;
+    cursor: pointer; 
+    z-index: 5;
+    display: flex; justify-content: center; align-items: center;
+    font-size: 1.2rem; 
+    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.05);
 }
-.fav-btn.active { color: var(--neon-red); border-color: var(--neon-red); text-shadow: 0 0 10px var(--neon-red); }
 
-.card-header { display: flex; justify-content: space-between; margin-bottom: 15px; }
-.card-badge { background: rgba(0, 243, 255, 0.1); color: var(--neon-blue); padding: 4px 10px; border-radius: 15px; font-size: 0.75rem; border: 1px solid var(--neon-blue); }
-.card-price { font-family: var(--font-tech); font-size: 1.4rem; color: var(--neon-gold); }
-.card-title { font-size: 1.6rem; margin: 10px 0; color: #fff; }
+.fav-btn:hover { transform: scale(1.1); color: var(--primary-blue); }
+.fav-btn.active { color: #f43f5e; transform: scale(1.1) rotate(15deg); }
+
+/* تفاصيل البطاقة */
+.card-header { display: flex; justify-content: space-between; margin: 15px 5px 10px; align-items: center; }
+
+.card-badge { 
+    background: #eff6ff; 
+    color: var(--primary-blue); 
+    padding: 6px 16px; 
+    border-radius: 12px; 
+    font-size: 0.75rem; 
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.card-price { font-weight: 900; font-size: 1.6rem; color: var(--primary-blue); letter-spacing: -1px; }
+.card-title { font-size: 1.5rem; margin: 5px; color: var(--text-dark); font-weight: 900; }
+
+/* زر الحجز المطور */
 .btn-select {
-    width: 100%; padding: 12px; background: transparent;
-    border: 2px solid var(--neon-green); color: var(--neon-green);
-    border-radius: 12px; cursor: pointer; transition: 0.3s;
-    font-weight: bold; margin-top: auto;
+    width: 100%; padding: 18px; 
+    background: var(--sky-gradient); 
+    border: none; 
+    color: #fff;
+    border-radius: 20px; 
+    cursor: pointer; 
+    transition: 0.4s;
+    font-weight: 800; 
+    margin-top: 15px;
+    font-size: 1.1rem;
+    box-shadow: 0 10px 20px rgba(0, 82, 212, 0.2);
 }
-.btn-select:hover { background: var(--neon-green); color: #000; box-shadow: 0 0 20px var(--neon-green); }
 
-/* المودال */
+.btn-select:hover { 
+    transform: translateY(-3px);
+    box-shadow: 0 15px 30px rgba(67, 100, 247, 0.4);
+    letter-spacing: 1px;
+}
+
+/* ==================== نافذة الحجز الفاخرة (Premium Modal 2025) ==================== */
+
+/* خلفية المودال الزجاجية الضبابية */
 .modal-overlay {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.95); z-index: 9000; display: none;
-    justify-content: center; align-items: center; backdrop-filter: blur(5px);
+    background: rgba(15, 23, 42, 0.4); /* تعتيم نيلي خفيف */
+    z-index: 15000; 
+    display: none;
+    justify-content: center; align-items: center; 
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
 }
-.modal-overlay.active { display: flex; }
+
+.modal-overlay.active { display: flex; animation: fadeIn 0.3s ease; }
+
+/* صندوق الحجز - تصميم كأنه حقيبة سفر مفتوحة */
 .modal-box {
-    background: #050a14; width: 92%; max-width: 550px; padding: 40px 25px; border: 2px solid var(--neon-blue);
-    border-radius: 30px; text-align: center; box-shadow: 0 0 50px rgba(0, 243, 255, 0.2);
-}
-.modal-actions { display: flex; gap: 10px; margin-top: 20px; }
-.btn-cancel { flex:1; padding:15px; background:transparent; border:1px solid #555; color:#fff; border-radius:10px; cursor:pointer; }
-.btn-confirm { flex:2; padding:15px; background:var(--neon-blue); border:none; border-radius:10px; font-weight:bold; cursor:pointer; }
-
-/* الجدول الزمني والتذكرة الرقمية داخل نافذة الحجز */
-.journey-timeline { display: flex; align-items: center; justify-content: center; margin: 25px 0; }
-.timeline-step { width: 35px; height: 35px; border-radius: 50%; border: 1px solid #333; display: flex; justify-content: center; align-items: center; background: #000; z-index: 2; }
-.timeline-step.active { border-color: var(--neon-blue); color: var(--neon-blue); box-shadow: 0 0 10px var(--neon-blue); }
-.timeline-line { width: 50px; height: 1px; background: #333; margin: 0 -5px; z-index: 1; }
-
-.digital-ticket {
-    background: rgba(255, 255, 255, 0.05);
-    color: #fff;
-    padding: 25px;
-    border-radius: 20px;
-    display: flex;
-    align-items: center;
-    gap: 25px;
-    margin-top: 25px;
-    border: 1px solid rgba(0, 243, 255, 0.2);
-    border-left: 8px solid var(--neon-blue);
+    background: #ffffff; 
+    width: 95%; 
+    max-width: 520px; 
+    padding: 45px 35px; 
+    border-radius: 40px; 
+    text-align: center; 
+    box-shadow: 0 40px 120px rgba(0, 82, 212, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.8);
     position: relative;
-    backdrop-filter: blur(10px);
-}
-.qr-placeholder { font-size: 2.5rem; color: #fff; text-shadow: 0 0 15px var(--neon-blue); }
-
-/* ==================== تحديث واجهة الترجمة للنمط العصري (2025) ==================== */
-
-#google_translate_element {
-    position: fixed !important;
-    bottom: 25px !important;
-    left: 25px !important;
-    z-index: 2147483647 !important;
-    
-    /* خلفية زجاجية عصرية بدلاً من النيون */
-    background: rgba(255, 255, 255, 0.08) !important;
-    backdrop-filter: blur(15px) !important;
-    -webkit-backdrop-filter: blur(15px) !important;
-    
-    /* حدود هادئة وراقية */
-    border: 1px solid rgba(255, 255, 255, 0.15) !important;
-    border-radius: 16px !important;
-    padding: 8px 16px !important;
-    
-    /* ظلال ناعمة (Depth Shadow) وليست توهج */
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.24) !important;
-    
-    display: flex !important;
-    align-items: center;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: modalSlideUp 0.6s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
-#google_translate_element:hover {
-    background: rgba(255, 255, 255, 0.12) !important;
-    border-color: rgba(255, 255, 255, 0.3) !important;
-    transform: translateY(-4px);
+@keyframes modalSlideUp {
+    from { transform: translateY(100px) scale(0.9); opacity: 0; }
+    to { transform: translateY(0) scale(1); opacity: 1; }
 }
 
-/* تنسيق القائمة المنسدلة للغات بنمط نظيف */
-.goog-te-combo {
-    background: transparent !important;
-    color: #ffffff !important;
-    border: none !important;
-    outline: none !important;
-    font-family: var(--font-main) !important;
-    font-weight: 500 !important;
-    font-size: 14px !important;
-    cursor: pointer !important;
-    padding: 4px 8px !important;
-    appearance: none;
+/* أزرار الإجراءات - نمط الـ Premium */
+.modal-actions { display: flex; gap: 15px; margin-top: 35px; }
+
+.btn-cancel { 
+    flex: 1; padding: 18px; 
+    background: #f1f5f9; 
+    border: 1px solid #e2e8f0; 
+    color: var(--text-muted); 
+    border-radius: 20px; 
+    cursor: pointer; 
+    font-weight: 800;
+    transition: 0.3s;
+}
+.btn-cancel:hover { background: #e2e8f0; color: var(--text-dark); }
+
+.btn-confirm { 
+    flex: 2; padding: 18px; 
+    background: var(--sky-gradient); 
+    color: #fff; 
+    border: none; 
+    border-radius: 22px; 
+    font-weight: 900; 
+    cursor: pointer; 
+    box-shadow: 0 10px 25px rgba(67, 100, 247, 0.25);
+    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.btn-confirm:hover { transform: scale(1.03); box-shadow: 0 15px 35px rgba(67, 100, 247, 0.4); }
+
+/* محرك الجدول الزمني (Booking Timeline) */
+.journey-timeline {
+    display: flex; align-items: center; justify-content: center;
+    margin: 25px 0 35px; gap: 10px;
 }
 
-/* إخفاء شعار جوجل والعناصر القديمة تماماً */
-.goog-logo-link, .goog-te-gadget span, .goog-te-banner-frame, .goog-te-gadget-icon {
-    display: none !important;
+.timeline-step { 
+    width: 38px; height: 38px; border-radius: 14px; 
+    border: 2px solid #f1f5f9; display: flex; 
+    justify-content: center; align-items: center; 
+    background: #fff; color: #cbd5e1; font-weight: 900;
+    font-size: 0.9rem; transition: 0.4s;
 }
 
-.goog-te-gadget {
-    color: transparent !important;
-    font-size: 0 !important;
+.timeline-step.active { 
+    border-color: var(--primary-blue); 
+    background: var(--primary-blue); 
+    color: #fff; 
+    box-shadow: 0 8px 20px rgba(0, 82, 212, 0.2);
+    transform: scale(1.1);
 }
 
-/* تنسيق الخيارات داخل القائمة لتناسب الخلفية الداكنة للمتصفح */
-.goog-te-combo option {
-    background-color: #1a1c1e !important;
-    color: #ffffff !important;
-    padding: 12px !important;
-}
+.timeline-line { flex-grow: 1; height: 3px; background: #f1f5f9; border-radius: 10px; max-width: 40px; }
 
-/* تصحيح موضع الجسم لضمان عدم اهتزاز الصفحة */
-body { top: 0 !important; }
-
-/* حل مشكلة الشبكة البيضاء المزعجة وتغييرها للنمط الداكن */
-.goog-te-menu-frame {
-    border-radius: 12px !important;
-    box-shadow: 0 12px 40px rgba(0,0,0,0.4) !important;
-    border: 1px solid rgba(255,255,255,0.1) !important;
-}
-
-/* التذييل (Footer) */
-.main-footer {
-    text-align: center;
-    color: rgba(255, 255, 255, 0.2);
-    margin-top: 60px;
+/* التذكرة الرقمية - نمط الـ First Class Pass */
+.digital-ticket {
+    background: #f8fbff;
+    color: var(--text-dark);
     padding: 30px;
-    font-size: 0.75rem;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-}
-/* تنسيق أدوات النظام (الطقس والعملة) */
-.system-widgets {
+    border-radius: 30px;
     display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 20px;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 30px;
+    border: 2px dashed #d1d5db;
+    position: relative;
+    box-shadow: inset 0 2px 10px rgba(0,0,0,0.02);
+}
+
+/* دوائر القص الجانبية للتذكرة */
+.digital-ticket::before, .digital-ticket::after {
+    content: ""; position: absolute; width: 24px; height: 24px;
+    background: #ffffff; border-radius: 50%; top: 50%; transform: translateY(-50%);
+    border: 2px dashed #d1d5db;
+}
+.digital-ticket::before { left: -14px; border-left: none; }
+.digital-ticket::after { right: -14px; border-right: none; }
+
+.qr-placeholder { 
+    color: var(--primary-blue); 
+    font-size: 3.5rem; 
+    background: white;
+    padding: 10px;
+    border-radius: 18px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.ticket-info { text-align: right; }
+.ticket-id { font-size: 0.65rem; color: var(--primary-blue); font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
+.ticket-price { font-size: 1.8rem; font-weight: 900; color: var(--text-dark); margin-top: 5px; }
+
+/* ==================== أدوات النظام والمحفظة (Modern Widgets) ==================== */
+.system-widgets {
+    display: flex; flex-direction: column; gap: 15px; margin-bottom: 30px;
 }
 
 .widget {
-    background: rgba(255, 255, 255, 0.02);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    padding: 12px 18px;
-    border-radius: 16px;
-    font-size: 0.8rem;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.widget:hover {
-    background: rgba(0, 243, 255, 0.05);
-    border-color: var(--neon-blue);
-    transform: translateY(-3px);
+    background: #ffffff;
+    border: 1px solid #edf2f7;
+    padding: 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    display: flex; align-items: center; gap: 12px;
+    transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+    color: var(--text-dark);
 }
 
-.widget i { color: var(--neon-blue); }
+.widget:hover { border-color: var(--primary-blue); transform: translateX(-5px); }
+.widget i { color: var(--primary-blue); font-size: 1.2rem; }
 
-.widget:hover {
-    border-color: var(--neon-blue);
-    background: rgba(0, 243, 255, 0.05);
-}
-
-/* حالة الطوارئ باللون الأحمر */
-.widget.emergency {
-    border-color: rgba(255, 42, 42, 0.3);
-    color: var(--neon-red);
-}
-
-.widget.emergency i { color: var(--neon-red); }
-
-/* تنسيق المحفظة الرقمية */
+/* المحفظة الرقمية بنمط بطاقة الـ VIP */
 .digital-vault {
-    background: rgba(0, 0, 0, 0.4);
-    border: 1px solid #222;
-    border-radius: 12px;
-    padding: 15px;
-    margin-bottom: 20px;
+    background: var(--sky-gradient);
+    border-radius: 25px;
+    padding: 25px;
+    margin-bottom: 30px;
+    color: white;
     text-align: center;
+    box-shadow: 0 15px 35px rgba(0, 82, 212, 0.2);
+    position: relative; overflow: hidden;
 }
 
 .vault-title {
-    font-size: 0.75rem;
-    color: var(--neon-gold);
-    margin-bottom: 10px;
-    letter-spacing: 1px;
+    font-size: 0.75rem; color: rgba(255,255,255,0.8);
+    margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px;
+}
+
+.vault-items {
+    display: flex; justify-content: space-around;
+    padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.vault-items i { cursor: pointer; transition: 0.3s; font-size: 1.4rem; opacity: 0.8; }
+.vault-items i:hover { color: var(--accent-gold); transform: scale(1.2); opacity: 1; }
+
+/* ==================== ملصقات العروض والبحث (Premium Labels) ==================== */
+.hot-deal-tag {
+    position: absolute; top: 15px; left: -10px;
+    background: linear-gradient(90deg, #f59e0b, #fbbf24);
+    color: #fff; padding: 6px 20px;
+    font-size: 0.75rem; font-weight: 800;
+    border-radius: 0 20px 20px 0;
+    box-shadow: 5px 5px 15px rgba(245, 158, 11, 0.2);
+    z-index: 10;
+}
+
+.price-old { text-decoration: line-through; color: #94a3b8; font-size: 0.85rem; margin-left: 10px; }
+.price-new { color: #10b981 !important; font-weight: 900; font-size: 1.6rem; }
+
+/* زر العودة للأعلى الذكي */
+.back-to-top {
+    position: fixed; bottom: 30px; right: 30px;
+    width: 55px; height: 55px; border-radius: 50%;
+    background: var(--primary-blue); color: #fff;
+    display: none; align-items: center; justify-content: center;
+    z-index: 5000; box-shadow: 0 10px 25px rgba(0, 82, 212, 0.3);
+    cursor: pointer; transition: 0.4s; border: none;
+}
+
+.back-to-top:hover { transform: translateY(-5px) scale(1.1); background: #004494; }
+
+/* ==================== هندسة الاستجابة (Responsive Architecture) ==================== */
+@media (max-width: 768px) {
+    .sidebar { width: 100%; right: -100%; }
+    .main-wrapper { padding: 100px 20px 40px; }
+    .control-bar { flex-direction: column; padding: 20px; border-radius: 30px; }
+    .trips-grid { grid-template-columns: 1fr; gap: 25px; }
+    .header-title { font-size: 1.8rem !important; }
+}
+/* ==================== أدوات النظام والويدجت (System Widgets) ==================== */
+.system-widgets {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.widget {
+    background: #ffffff;
+    border: 1px solid rgba(0, 82, 212, 0.05);
+    padding: 16px 20px;
+    border-radius: 22px;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    color: var(--text-dark);
+    font-weight: 600;
+}
+
+.widget:hover {
+    border-color: var(--primary-blue);
+    transform: translateX(-8px);
+    box-shadow: 0 10px 20px rgba(0, 82, 212, 0.08);
+}
+
+.widget i { 
+    color: var(--primary-blue); 
+    font-size: 1.2rem;
+    filter: drop-shadow(0 2px 4px rgba(0, 82, 212, 0.2));
+}
+
+/* حالة الطوارئ بنمط تحذيري راقٍ */
+.widget.emergency {
+    border-color: #fee2e2;
+    background: #fffcfc;
+    color: var(--status-error);
+}
+.widget.emergency i { color: var(--status-error); }
+
+/* ==================== المحفظة الرقمية (The VIP Digital Vault) ==================== */
+.digital-vault {
+    background: var(--sky-gradient);
+    border: none;
+    border-radius: 28px;
+    padding: 25px;
+    margin-bottom: 30px;
+    text-align: center;
+    color: #ffffff;
+    box-shadow: 0 20px 40px rgba(0, 82, 212, 0.25);
+    position: relative;
+    overflow: hidden;
+}
+
+/* تأثير لمعة البطاقة */
+.digital-vault::after {
+    content: ""; position: absolute; top: -50%; left: -50%;
+    width: 200%; height: 200%; 
+    background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+    transform: rotate(30deg); pointer-events: none;
+}
+
+.vault-title {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 800;
 }
 
 .vault-items {
     display: flex;
     justify-content: space-around;
-    font-size: 1.2rem;
-    color: #666;
+    font-size: 1.5rem;
+    color: rgba(255, 255, 255, 0.9);
+    padding-top: 18px;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
 }
 
-.vault-items i {
+.vault-items i { transition: 0.4s; cursor: pointer; opacity: 0.8; }
+.vault-items i:hover { 
+    color: var(--accent-gold); 
+    transform: scale(1.25) translateY(-2px); 
+    opacity: 1;
+    filter: drop-shadow(0 5px 15px rgba(251, 191, 36, 0.4));
+}
+
+/* ==================== عناصر التحكم والتنقل (UI Controls) ==================== */
+#mobile-toggle {
+    display: none;
+    color: var(--primary-blue);
+    font-size: 1.6rem;
     cursor: pointer;
     transition: 0.3s;
 }
 
-.vault-items i:hover {
-    color: var(--neon-gold);
-    text-shadow: 0 0 10px var(--neon-gold);
-    transform: scale(1.2);
-} /* هذا القوس كان مفقوداً هنا لإغلاق التأثير */
-
-/* زر فتح القائمة للجوال */
-#mobile-toggle {
-    display: none;
-    color: var(--neon-blue);
-    font-size: 1.2rem;
+.back-to-top {
+    position: fixed;
+    bottom: 35px;
+    right: 35px;
+    width: 58px; height: 58px;
+    border-radius: 50%;
+    background: var(--primary-blue);
+    color: #ffffff;
+    display: none; /* يتم التحكم به عبر JS */
+    align-items: center;
+    justify-content: center;
+    z-index: 8000;
+    transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 12px 30px rgba(0, 82, 212, 0.3);
+    border: none;
     cursor: pointer;
 }
 
-/* زر العودة للأعلى - بتصميم عصري هادئ */
-.back-to-top {
-    position: fixed;
-    bottom: 90px;
-    left: 30px;
-    width: 50px;
-    height: 50px;
-    border-radius: 18px; /* شكل مربع منحني عصري */
-    background: rgba(10, 20, 35, 0.8);
-    backdrop-filter: blur(15px);
-    border: 1px solid rgba(0, 243, 255, 0.2);
-    color: var(--neon-blue);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 5000;
-    transition: 0.5s;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-}
 .back-to-top:hover {
-    background: var(--neon-blue);
-    color: #000;
-    transform: scale(1.1) rotate(360deg);
+    transform: translateY(-8px) scale(1.1);
+    background: #004494;
+    box-shadow: 0 15px 35px rgba(0, 82, 212, 0.4);
 }
 
-/* تحسين مظهر ويدجت الطقس LIVE */
-#weather-widget {
-    cursor: help;
-    position: relative;
-    overflow: hidden;
-}
-
+/* ويدجت الطقس المباشر */
+#weather-widget { position: relative; cursor: default; }
 #weather-widget::after {
     content: "LIVE";
-    position: absolute;
-    top: 2px;
-    left: 5px;
-    font-size: 0.5rem;
-    color: var(--neon-red);
-    font-weight: bold;
-    animation: pulse 1s infinite;
+    position: absolute; top: 6px; left: 12px;
+    font-size: 0.5rem; color: var(--status-error);
+    font-weight: 900; animation: pulse 1.5s infinite;
 }
 
-/* تصميم خيارات الحجز التسلسلي - النمط العصري المستقبلي */
+/* ==================== خطوات الحجز والملخص (Booking Engine UI) ==================== */
 .step-options {
     display: flex;
     flex-direction: column;
     gap: 15px;
-    margin-top: 25px;
+    margin-top: 30px;
 }
 
 .opt-btn {
-    padding: 20px;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: #fff;
-    border-radius: 18px;
+    padding: 20px 25px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    color: var(--text-dark);
+    border-radius: 22px;
     cursor: pointer;
     transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    text-align: right;
-    font-family: var(--font-main);
+    font-weight: 700;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    text-align: right;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
 }
 
 .opt-btn:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: var(--neon-blue);
-    transform: translateX(-5px);
+    background: #f8fafc;
+    border-color: var(--primary-blue);
+    color: var(--primary-blue);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 82, 212, 0.08);
 }
 
+.opt-btn:active { transform: scale(0.98); }
+
 .summary-box {
-    background: linear-gradient(145deg, rgba(10, 20, 35, 0.9), rgba(0, 0, 0, 0.8));
+    background: #ffffff;
     padding: 35px;
-    border-radius: 30px;
-    border: 1px solid rgba(0, 243, 255, 0.2);
+    border-radius: 32px;
+    border: 1px solid #edf2f7;
     text-align: right;
-    line-height: 2.2;
-    backdrop-filter: blur(20px);
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+    box-shadow: var(--shadow-premium);
+    margin-top: 20px;
 }
-/* ==================== تنسيق صندوق الاقتراحات الذكي (Vogue Style) ==================== */
+/* ==================== صندوق الاقتراحات العصري (Smart Search Dropdown) ==================== */
 .search-wrapper { position: relative; flex-grow: 1; }
 
 .suggestions-box {
     position: absolute;
-    top: calc(100% + 15px); /* مسافة احترافية تجعلها طافية */
+    top: calc(100% + 15px); /* مسافة احترافية لخلق شعور بالعمق */
     right: 0;
     width: 100%;
-    background: rgba(15, 25, 40, 0.9);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    border: 1px solid rgba(0, 243, 255, 0.2); /* حدود النيون الهادئة فقط */
-    border-radius: 18px; /* انحناء أكثر عصرية */
-    z-index: 5000;
-    display: none;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+    background: rgba(255, 255, 255, 0.98); /* بياض زجاجي ناصع */
+    backdrop-filter: blur(25px) saturate(200%);
+    -webkit-backdrop-filter: blur(25px) saturate(200%);
+    border: 1px solid rgba(0, 82, 212, 0.08);
+    border-radius: 24px;
+    z-index: 9500;
+    display: none; /* يتم التحكم به عبر JS */
+    box-shadow: 0 25px 60px rgba(0, 82, 212, 0.12);
     overflow: hidden;
-    transition: all 0.3s ease;
+    animation: slideDownFade 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideDownFade {
+    from { transform: translateY(-15px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
 }
 
 .suggestion-item {
-    padding: 15px 20px;
+    padding: 18px 25px;
     cursor: pointer;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid #f8fafc;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    color: #eee;
+    transition: all 0.3s ease;
+    color: var(--text-dark);
+    font-weight: 700;
 }
+
+.suggestion-item:last-child { border-bottom: none; }
 
 .suggestion-item:hover {
-    background: rgba(255, 255, 255, 0.05);
-    padding-right: 25px; /* تأثير حركة ناعم للمسافر */
-    color: var(--neon-blue);
+    background: #f0f7ff;
+    padding-right: 35px; /* تأثير حركة "المسافر" الانسيابية */
+    color: var(--primary-blue);
 }
-/* تنسيق قسم الحجوزات في السايدبار */
+
+.suggestion-item i {
+    font-size: 1rem;
+    color: var(--primary-blue);
+    opacity: 0.6;
+    transition: 0.3s;
+}
+
+.suggestion-item:hover i { opacity: 1; transform: scale(1.2); }
+
+/* ==================== قسم الحجوزات النشطة (Sidebar Bookings List) ==================== */
 .bookings-section {
-    margin-top: 20px;
-    padding: 15px;
-    background: rgba(255, 255, 255, 0.02);
-    border-radius: 15px;
-    border: 1px dashed rgba(255, 255, 255, 0.1);
+    margin-top: 30px;
+    padding: 0 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
+/* بطاقة الحجز - تصميم كأنها تذكرة رقمية مصغرة */
 .booking-card {
-    background: rgba(0, 0, 0, 0.4);
-    border-right: 4px solid var(--neon-green);
-    padding: 12px;
-    border-radius: 8px;
-    margin-bottom: 10px;
-    font-size: 0.8rem;
+    background: #ffffff;
+    border: 1px solid #edf2f7;
+    border-right: 6px solid var(--primary-blue); /* تمييز بأزرق الطيران الملكي */
+    padding: 16px 20px;
+    border-radius: 22px;
+    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
+    position: relative;
+    overflow: hidden;
 }
 
-.booking-id { color: #888; font-size: 0.7rem; margin-bottom: 5px; }
-.booking-city { font-weight: bold; color: #fff; margin-bottom: 8px; }
-.booking-footer { display: flex; justify-content: space-between; font-size: 0.75rem; }
-/* ==================== تنسيق ملصق العروض الساخنة (Hot Deals) ==================== */
-.hot-deal-tag {
-    position: absolute;
-    top: 15px;
-    right: -35px;
-    background: linear-gradient(45deg, #ff2a2a, #ff8c00);
-    color: white;
-    padding: 5px 40px;
-    font-size: 0.7rem;
-    font-weight: bold;
-    transform: rotate(45deg);
-    box-shadow: 0 5px 15px rgba(255, 42, 42, 0.4);
-    z-index: 10;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+.booking-card:hover {
+    transform: scale(1.03) translateY(-3px);
+    box-shadow: 0 15px 30px rgba(0, 82, 212, 0.08);
+    border-color: var(--primary-blue);
 }
 
-.price-old {
-    text-decoration: line-through;
-    color: #555;
-    font-size: 0.9rem;
-    margin-left: 8px;
-}
-
-.price-new {
-    color: var(--neon-green) !important;
+/* إضافة أيقونة طائرة خفيفة في خلفية البطاقة */
+.booking-card::after {
+    content: "\f0fb"; /* كود طائرة من FontAwesome */
+    font-family: "Font Awesome 6 Free";
     font-weight: 900;
+    position: absolute;
+    bottom: -10px;
+    left: -10px;
+    font-size: 3rem;
+    color: var(--primary-blue);
+    opacity: 0.03;
+    transform: rotate(-45deg);
 }
-.suggestion-item small {
-    background: rgba(0, 243, 255, 0.1);
-    color: var(--neon-blue);
-    padding: 2px 10px;
-    border-radius: 20px;
-    font-size: 0.65rem;
-    font-weight: bold;
-}
-/* ==================== هندسة الواجهة العصرية (Modern Integrated UI) ==================== */
 
-/* الصفحة الرئيسية - واسعة ومنظمة */
+.booking-id { 
+    color: var(--text-muted); 
+    font-size: 0.7rem; 
+    margin-bottom: 8px; 
+    font-weight: 800; 
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.booking-city { 
+    font-weight: 900; 
+    color: var(--text-dark); 
+    margin-bottom: 12px; 
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.booking-footer { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    font-size: 0.8rem; 
+    font-weight: 800; 
+    border-top: 1px dashed #edf2f7;
+    padding-top: 10px;
+}
+
+.booking-footer .price { color: var(--status-success); font-size: 0.9rem; }
+.booking-footer .date { color: var(--text-muted); }
+
+/* ==================== هندسة الواجهة العصرية (Premium Layout 2025) ==================== */
+
+/* الغلاف الرئيسي - مساحات واسعة ومريحة */
 .main-wrapper {
     width: 100%;
     max-width: 1400px;
     margin: 0 auto;
-    padding: 100px 30px 50px;
+    padding: 120px 40px 60px;
     transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1);
 }
 
-/* القائمة الجانبية (The Premium Sidebar) */
+/* القائمة الجانبية (The Glass Sidebar) - نمط السفر الفاخر */
 .sidebar {
- position: fixed;
+    position: fixed;
     top: 0;
-    right: -350px; /* مخفية تماماً خارج الشاشة بشكل افتراضي */
-    width: 350px;
+    right: -380px; /* مخفية تماماً */
+    width: 380px;
     height: 100vh;
-    background: rgba(13, 17, 23, 0.95);
-    backdrop-filter: blur(30px);
-    -webkit-backdrop-filter: blur(30px);
-  border-left: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.95); /* بياض زجاجي ناصع */
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border-left: 1px solid rgba(0, 82, 212, 0.1);
     z-index: 10000;
-    padding: 40px 25px;
+    padding: 50px 30px;
     display: flex;
     flex-direction: column;
-    box-shadow: -10px 0 50px rgba(0, 0, 0, 0.8);
+    box-shadow: -15px 0 50px rgba(0, 82, 212, 0.05);
     transition: all 0.6s cubic-bezier(0.65, 0, 0.35, 1);
-    overflow-y: auto; /* يسمح بالتمرير داخل السايدبار فقط إذا كان المحتوى طويلاً */
-    will-change: right; /* يخبر المتصفح بالاستعداد لتحريك القائمة، مما يلغي أي "نتعات" بسيطة */
+    overflow-y: auto;
 }
 
-/* عندما تصبح القائمة نشطة */
-.sidebar.active {
-    right: 0;
-}
+.sidebar.active { right: 0; }
 
-/* الطبقة الشفافة خلف القائمة (Overlay) */
+/* الطبقة الشفافة خلف القائمة */
 .sidebar-overlay {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(15, 23, 42, 0.4);
     backdrop-filter: blur(8px);
     z-index: 9999;
     display: none;
     opacity: 0;
-    transition: opacity 0.4s ease;
+    transition: opacity 0.5s ease;
 }
 
-.sidebar-overlay.active {
-    display: block;
-    opacity: 1;
-}
-body.sidebar-open .main-wrapper {
-    transform: translateX(-30px); /* إزاحة خفيفة تعطي شعوراً بالعمق */
-}
-/* تصميم عناصر القائمة بشكل تطبيقات السفر الراقية */
+.sidebar-overlay.active { display: block; opacity: 1; }
+
+/* صندوق بروفايل المسافر */
 .user-profile-box {
-    background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 100%);
+    background: var(--sky-gradient);
     border-radius: 24px;
-    padding: 25px;
-    margin-bottom: 30px;
-    border: 1px solid rgba(255,255,255,0.1);
+    padding: 30px 20px;
+    margin-bottom: 35px;
+    color: white;
+    box-shadow: 0 10px 25px rgba(0, 82, 212, 0.2);
     text-align: center;
 }
 
+/* عناصر التنقل */
 .nav-item {
-    padding: 16px 20px;
-    border-radius: 16px;
-    margin-bottom: 8px;
+    padding: 18px 22px;
+    border-radius: 20px;
+    margin-bottom: 10px;
     display: flex;
     align-items: center;
     gap: 15px;
-    color: rgba(255,255,255,0.65);
-    font-weight: 500;
-    transition: 0.3s;
+    color: var(--text-muted);
+    font-weight: 700;
+    transition: 0.3s ease;
+    cursor: pointer;
 }
 
 .nav-item:hover, .nav-item.active {
-    background: rgba(255, 243, 255, 0.05);
-    color: var(--neon-blue);
-    transform: scale(1.02);
+    background: #f0f7ff;
+    color: var(--primary-blue);
+    transform: scale(1.03);
 }
 
-/* ==================== استجابة الشاشات للجوال ==================== */
+/* ==================== ملصقات العروض والأسعار (Premium UI Components) ==================== */
+.hot-deal-tag {
+    position: absolute; top: 15px; left: -10px;
+    background: linear-gradient(90deg, #f59e0b, #fbbf24);
+    color: #fff; padding: 6px 20px;
+    font-size: 0.75rem; font-weight: 800;
+    border-radius: 0 20px 20px 0;
+    box-shadow: 5px 5px 15px rgba(245, 158, 11, 0.2);
+    z-index: 10;
+}
+
+.price-old { text-decoration: line-through; color: #94a3b8; font-size: 0.85rem; margin-left: 10px; }
+.price-new { color: #10b981 !important; font-weight: 900; font-size: 1.6rem; }
+
+/* ==================== استجابة الجوال (Mobile Optimized) ==================== */
 @media (max-width: 768px) {
+    /* زر فتح القائمة - يجب أن يكون مستقلاً لكي يظهر دائماً */
+    #mobile-toggle {
+        display: flex !important;
+        position: fixed;
+        top: 15px;
+        right: 20px;
+        z-index: 9500; /* تحت السايدبار وفوق المحتوى */
+        background: white;
+        width: 45px;
+        height: 45px;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        color: var(--primary-blue);
+        font-size: 1.4rem;
+    }
+
     .sidebar {
-        width: 100%;
-        right: -100%; /* مخفية تماماً في الجوال */
-        border-left: none;
+        width: 85%; /* ترك مساحة بسيطة لرؤية الخلفية */
+        right: -100%;
+        border-radius: 30px 0 0 30px; /* انحناء جانبي فخم */
     }
 
-    .header-title {
-        font-size: 1.6rem !important;
-        letter-spacing: 0;
-    }
+    .main-wrapper { padding: 100px 20px 40px; }
 
-    .main-wrapper {
-        padding: 90px 20px 40px; /* تقليل المسافات لتناسب الجوال */
-    }
+    .header-title { font-size: 1.8rem !important; }
 
     .control-bar {
-        padding: 10px 20px;
-        flex-direction: column; /* ترتيب العناصر فوق بعضها في الجوال */
+        flex-direction: column;
+        padding: 20px;
+        gap: 15px;
         border-radius: 25px;
     }
+
+    .search-input { width: 100%; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px; }
+
+    .quick-filters { width: 100%; justify-content: space-between; }
 }
