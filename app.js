@@ -104,258 +104,433 @@ const destinations = [
     { id: "NB-99", name: "نيوم", price: 9000, type: "مستقبلية", risk: 0, desc: "مشروع ذا لاين، وسندالة، وتروجينا." },
     { id: "NB-100", name: "القدس", price: 1500, type: "دينية", risk: 2, desc: "المسجد الأقصى المبارك، وقبة الصخرة." }
 ];
+/* ==================== محرك تطوير البيانات والمتغيرات الأساسية ==================== */
+destinations.forEach((dest, index) => {
+    // إضافة التصنيفات والتقييمات والصور الذكية آلياً لـ 100 وجهة
+    dest.category = (index < 35) ? "local" : "global";
+    dest.rating = (4.2 + Math.random() * 0.8).toFixed(1);
+    const searchKeyword = index < 35 ? `${dest.name},Saudi Arabia` : dest.name;
+    dest.image = `https://loremflickr.com/600/400/${encodeURIComponent(searchKeyword)}?lock=${index}`;
+    if (dest.risk === undefined) dest.risk = 0;
+});
 
+// إدارة حالة النظام (State Management) - نسخة موحدة ومحمية
 let favorites = JSON.parse(localStorage.getItem('nourbest_favs')) || [];
-let currentSelection = "";
+let bookings = JSON.parse(localStorage.getItem('nourbest_bookings')) || [];
 let nourCoinBalance = parseFloat(localStorage.getItem('nour_coin_balance')) || 500.00;
+let currentSelection = null; // جعلناه Null بدلاً من نص فارغ لضمان دقة محرك الحجز
 let currentStep = 1;
 let bookingData = { flight: 0, hotel: 0, car: 0, total: 0 };
-let bookings = JSON.parse(localStorage.getItem('nourbest_bookings')) || [];
-// ================= محرك الصوت =================
-const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+/* ==================== محرك العرض الأساسي (Rendering Engine) ==================== */
 
-function playSystemSound(type) {
-    if (audioCtx.state === 'suspended') audioCtx.resume();
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
+// 1. دالة عرض الوجهات في الشبكة (Grid)
+function renderDestinations(list) {
+    const grid = document.querySelector('.trips-grid');
+    if (!grid) return;
+    
+    grid.innerHTML = ""; // تنظيف الشبكة قبل العرض
 
-    if (type === 'hover') {
-        osc.frequency.setValueAtTime(400, audioCtx.currentTime);
-        osc.type = 'sine';
-        gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.05);
-    } else if (type === 'click') {
-        osc.frequency.setValueAtTime(600, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.1);
-        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.1);
-    } else if (type === 'success') {
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(400, audioCtx.currentTime);
-        osc.frequency.linearRampToValueAtTime(800, audioCtx.currentTime + 0.2);
-        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.5);
+    list.forEach(dest => {
+        const isFav = favorites.includes(dest.id);
+        const riskClass = dest.risk === 2 ? 'emergency' : (dest.risk === 1 ? 'warning' : 'safe');
+        
+        const card = `
+            <div class="trip-card" data-id="${dest.id}">
+                ${dest.price > 4000 ? '<div class="hot-deal-tag">VIP Choice</div>' : ''}
+                <div class="fav-btn ${isFav ? 'active' : ''}" onclick="toggleFavorite('${dest.id}')">
+                    <i class="fa-${isFav ? 'solid' : 'regular'} fa-heart"></i>
+                </div>
+                
+                <div style="height: 180px; background: url('${dest.image}') center/cover; border-radius: 15px; margin-bottom: 15px;"></div>
+                
+                <div class="card-header">
+                    <span class="card-badge">${dest.type}</span>
+                    <span class="card-price">${dest.price} NC</span>
+                </div>
+                
+                <h3 class="card-title">${dest.name}</h3>
+                <p style="font-size: 0.8rem; color: #888; margin-bottom: 15px;">${dest.desc}</p>
+                
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <div style="color: var(--neon-gold); font-size: 0.85rem;">
+                        <i class="fas fa-star"></i> ${dest.rating}
+                    </div>
+                    <div class="widget ${riskClass}" style="padding: 2px 8px; font-size: 0.6rem;">
+                        <i class="fas fa-shield-halved"></i> Risk Lvl: ${dest.risk}
+                    </div>
+                </div>
+                
+                <button class="btn-select" onclick="startBooking('${dest.id}')">
+                    <i class="fas fa-paper-plane"></i> حجز الرحلة الآن
+                </button>
+            </div>
+        `;
+        grid.innerHTML += card;
+    });
+}
+
+// 2. تحديث واجهة الرصيد (Nour Coin)
+function updateBalanceUI() {
+    const balanceElements = document.querySelectorAll('.vault-balance');
+    balanceElements.forEach(el => {
+        el.innerText = nourCoinBalance.toFixed(2) + " NC";
+    });
+    localStorage.setItem('nour_coin_balance', nourCoinBalance);
+}
+
+// 3. تشغيل النظام عند التحميل
+window.onload = () => {
+    renderDestinations(destinations);
+    updateBalanceUI();
+    
+    // إخفاء شاشة التحميل بعد ثانية واحدة
+    setTimeout(() => {
+        const loader = document.getElementById('loader-screen');
+        if (loader) loader.style.opacity = '0';
+        setTimeout(() => loader.style.display = 'none', 1000);
+    }, 1500);
+};
+/* ==================== نظام التفاعل والبحث (Interaction & Search) ==================== */
+
+// 1. إضافة/حذف من المفضلة
+function toggleFavorite(id) {
+    const index = favorites.indexOf(id);
+    if (index > -1) {
+        favorites.splice(index, 1); // حذف إذا كانت موجودة
+        showToast("تم الحذف من المفضلة", "info");
+    } else {
+        favorites.push(id); // إضافة إذا لم تكن موجودة
+        showToast("تمت الإضافة للمفضلة", "success");
+    }
+    
+    localStorage.setItem('nourbest_favs', JSON.stringify(favorites));
+    renderDestinations(destinations); // إعادة الرسم لتحديث شكل القلب
+}
+
+// 2. نظام البحث الذكي (Real-time Search)
+function searchDestinations() {
+    const query = document.querySelector('.search-input').value.toLowerCase();
+    const suggestions = document.querySelector('.suggestions-box');
+    
+    const filtered = destinations.filter(dest => 
+        dest.name.toLowerCase().includes(query) || 
+        dest.type.toLowerCase().includes(query)
+    );
+
+    renderDestinations(filtered);
+
+    // إظهار صندوق الاقتراحات الذكي
+    if (query.length > 0 && filtered.length > 0) {
+        suggestions.style.display = 'block';
+        suggestions.innerHTML = filtered.slice(0, 5).map(f => `
+            <div class="suggestion-item" onclick="quickSelect('${f.name}')">
+                <span>${f.name}</span>
+                <small>${f.type}</small>
+            </div>
+        `).join('');
+    } else {
+        suggestions.style.display = 'none';
     }
 }
 
-// ================= محرك Matrix Rain =================
+// 3. نظام التصفية (Filters: Local / Global / Cheap)
+function filterCategory(cat) {
+    let result = [];
+    if (cat === 'all') result = destinations;
+    else if (cat === 'local') result = destinations.filter(d => d.category === 'local');
+    else if (cat === 'global') result = destinations.filter(d => d.category === 'global');
+    else if (cat === 'cheap') result = destinations.filter(d => d.price < 1000);
+    
+    renderDestinations(result);
+    
+    // إغلاق السايدبار تلقائياً في الجوال بعد الاختيار
+    document.querySelector('.sidebar').classList.remove('active');
+}
+
+// 4. دالة الاختيار السريع من البحث
+function quickSelect(name) {
+    document.querySelector('.search-input').value = name;
+    searchDestinations();
+}
+/* ==================== محرك الحجز المطور (Ultimate Booking System) ==================== */
+
+// 1. دالة بدء الحجز وتجهيز البيانات
+function startBooking(id) {
+    playSystemSound('click');
+    const dest = destinations.find(d => d.id === id);
+    if (!dest) return;
+
+    currentSelection = dest;
+    bookingData = { flight: 0, hotel: 0, car: 0, total: dest.price };
+    currentStep = 1;
+    
+    document.querySelector('.modal-overlay').classList.add('active');
+    renderBookingStep();
+}
+
+// 2. محرك رسم خطوات الحجز (Step Renderer)
+function renderBookingStep() {
+    const modalBox = document.querySelector('.modal-box');
+    const steps = [1, 2, 3];
+    
+    let content = `
+        <h2 class="brand-title" style="font-size: 1.5rem;">رحلة إلى: ${currentSelection.name}</h2>
+        <div class="journey-timeline">
+            ${steps.map(s => `<div class="timeline-step ${s <= currentStep ? 'active' : ''}">${s}</div>`).join('<div class="timeline-line"></div>')}
+        </div>
+    `;
+
+    if (currentStep === 1) {
+        content += `
+            <p>اختر درجة السفر:</p>
+            <div class="step-options">
+                <button class="opt-btn" onclick="applyOption('flight', 0, 'الاقتصادية')">✈️ الدرجة الاقتصادية (+0 NC)</button>
+                <button class="opt-btn" onclick="applyOption('flight', 800, 'الأعمال')">💼 درجة الأعمال (+800 NC)</button>
+            </div>`;
+    } else if (currentStep === 2) {
+        content += `
+            <p>اختر مكان الإقامة:</p>
+            <div class="step-options">
+                <button class="opt-btn" onclick="applyOption('hotel', 400, 'فندق 5 نجوم')">🏨 فندق نيون VIP (+400 NC)</button>
+                <button class="opt-btn" onclick="applyOption('hotel', 0, 'بدون إقامة')">🏠 إقامة خاصة (+0 NC)</button>
+            </div>`;
+    } else if (currentStep === 3) {
+        const finalTotal = bookingData.total + bookingData.flight + bookingData.hotel;
+        content += `
+            <div class="digital-ticket">
+                <div class="qr-placeholder"><i class="fas fa-qrcode"></i></div>
+                <div style="text-align: right;">
+                    <div style="font-size: 0.7rem; color: var(--neon-blue);">رقم الحجز: #NB${Math.floor(Math.random()*9000)}</div>
+                    <div style="font-weight: bold;">المجموع: ${finalTotal} NC</div>
+                </div>
+            </div>
+            <button class="btn-confirm" style="width:100%; margin-top:20px;" onclick="completeBooking(${finalTotal})">تأكيد الحجز والدفع</button>`;
+    }
+
+    modalBox.innerHTML = content + `<button class="btn-cancel" style="margin-top:15px; width:100%;" onclick="closeModal()">إلغاء</button>`;
+}
+
+// 3. تطبيق الاختيارات
+function applyOption(type, price, label) {
+    playSystemSound('hover');
+    bookingData[type] = price;
+    addLog(`تم إضافة: ${label}`);
+    currentStep++;
+    renderBookingStep();
+}
+
+// 4. إكمال الحجز وخصم الرصيد
+function completeBooking(finalTotal) {
+    if (nourCoinBalance >= finalTotal) {
+        nourCoinBalance -= finalTotal;
+        updateBalanceUI();
+        playSystemSound('success');
+        showToast("تم تأكيد الحجز بنجاح!", "success");
+        closeModal();
+        addLog(`تم حجز رحلة ${currentSelection.name} بنجاح.`);
+    } else {
+        showToast("رصيد Nour Coin غير كافٍ!", "error");
+    }
+}
+
+function closeModal() {
+    document.querySelector('.modal-overlay').classList.remove('active');
+}
+
+// 5. دالة السجلات (Terminal Logs)
+function addLog(msg) {
+    const terminal = document.querySelector('.terminal-window');
+    if (terminal) {
+        terminal.innerHTML += `<div>> [${new Date().toLocaleTimeString()}] ${msg}</div>`;
+        terminal.scrollTop = terminal.scrollHeight;
+    }
+}
+
+/* ==================== المحرك البصري وتفاعل الواجهة (Visual & UI Core) ==================== */
+
+// 1. محرك مطر الماتريكس (Matrix Rain)
 const canvas = document.getElementById('matrix-bg');
-const ctx = canvas.getContext('2d');
+const ctx = canvas ? canvas.getContext('2d') : null;
 const fontSize = 16;
 let columns, rainDrops;
 const alphabet = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
 function initMatrix() {
+    if (!canvas) return;
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     columns = canvas.width / fontSize;
     rainDrops = Array(Math.floor(columns)).fill(1);
 }
-initMatrix(); // تشغيل أولي
 
 const drawMatrix = () => {
+    if (!ctx) return;
+    // تأثير التلاشي التدريجي
     ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = '#0F0'; 
+    
+    ctx.fillStyle = '#0F0'; // اللون الأخضر التقليدي
     ctx.font = fontSize + 'px monospace';
 
     for(let i = 0; i < rainDrops.length; i++) {
         const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
-        ctx.fillText(text, i*fontSize, rainDrops[i]*fontSize);
-        if(rainDrops[i]*fontSize > canvas.height && Math.random() > 0.975){
+        ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
+        
+        if(rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {
             rainDrops[i] = 0;
         }
         rainDrops[i]++;
     }
 };
-setInterval(drawMatrix, 30);
 
-// دالة فتح وإغلاق القائمة الجانبية في الجوال
+// تشغيل الماتريكس وتحديث الحجم تلقائياً
+if (canvas) {
+    initMatrix();
+    setInterval(drawMatrix, 35);
+    window.addEventListener('resize', initMatrix); // تحديث عند تغيير حجم النافذة
+}
+
+// 2. التحكم في القائمة الجانبية (Sidebar Master)
 function toggleSidebar() {
     playSystemSound('click'); 
     const sidebar = document.querySelector('.sidebar');
-    const overlay = document.getElementById('sidebar-overlay');
+    const overlay = document.querySelector('.sidebar-overlay');
     const wrapper = document.querySelector('.main-wrapper');
 
-    const isActive = sidebar.classList.toggle('active');
-    if(overlay) overlay.classList.toggle('active');
-    
-    // إزاحة بسيطة للمحتوى عند فتح القائمة في الشاشات الكبيرة لزيادة الجمالية
-    if(window.innerWidth > 1100) {
-        wrapper.style.transform = isActive ? "translateX(-30px)" : "translateX(0)";
+    if (sidebar && overlay) {
+        const isActive = sidebar.classList.toggle('active');
+        overlay.classList.toggle('active');
+        document.body.classList.toggle('sidebar-open');
+        
+        // إزاحة ذكية للمحتوى في الشاشات الكبيرة
+        if(window.innerWidth > 1100 && wrapper) {
+            wrapper.style.transform = isActive ? "translateX(-30px)" : "translateX(0)";
+        }
+        
+        addLog(isActive ? "تم تفعيل واجهة التحكم الجانبية." : "تم إغلاق واجهة التحكم.");
     }
-    
-    addLog(isActive ? "تم تفعيل لوحة التحكم." : "تم إخفاء لوحة التحكم.");
 }
- // هنا أغلقنا القائمة لتعمل بشكل مستقل
 
-// منطق زر العودة للأعلى عند النزول بالصفحة (خارج الدالة ليعمل دائماً)
-window.onscroll = function() {
+// 3. محرك التمرير وزر العودة (Scroll Engine)
+window.addEventListener('scroll', () => {
     const topBtn = document.getElementById('back-to-top');
     if (topBtn) {
-        if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
-            topBtn.style.display = "flex";
-        } else {
-            topBtn.style.display = "none";
-        }
+        // إظهار الزر عند النزول أكثر من 400 بكسل
+        topBtn.style.display = (window.scrollY > 400) ? "flex" : "none";
     }
-};
+});
 
-// عند الضغط على الزر يصعد للأعلى بسلاسة
-if(document.getElementById('back-to-top')) {
-    document.getElementById('back-to-top').onclick = function() {
-        window.scrollTo({top: 0, behavior: 'smooth'});
-        playSystemSound('hover');
-    };
+function scrollToTop() {
+    window.scrollTo({top: 0, behavior: 'smooth'});
+    playSystemSound('hover');
 }
-// ================= المنطق الرئيسي =================
+/* ==================== محرك الإقلاع الرئيسي (System Boot Sequence) ==================== */
+
 window.onload = () => {
+    // 1. تشغيل المحرك البصري للماتريكس
+    if (typeof initMatrix === "function") initMatrix();
+    
+    // 2. عرض الوجهات وتحديث الرصيد
+    renderDestinations(destinations);
+    updateBalanceUI();
+    
+    // 3. تسلسل رسائل التيرمينال عند التشغيل
+// تحديد وقت الدخول لإعطاء تحية ذكية
+    const hours = new Date().getHours();
+    const greeting = hours < 12 ? "صباح الخير أيها القائد" : "طاب مساؤك أيها القائد";
+
+    const bootMsgs = [
+        "Initializing NourBest OS Core...",
+        "Connecting to Global Satellite Grid...",
+        "Loading 100 Destination Nodes...",
+        "Matrix Encryption Active.",
+        `[CONFIRMED] ${greeting}. النظام جاهز للعمل.`
+    ];
+    
+    let i = 0;
+    const bootInterval = setInterval(() => {
+        if (i < bootMsgs.length) {
+            addLog(bootMsgs[i++]);
+        } else {
+            clearInterval(bootInterval);
+        }
+    }, 500);
+
+    // 4. إخفاء شاشة التحميل
     setTimeout(() => {
-        document.getElementById('loader-screen').style.opacity = '0';
-        setTimeout(() => {
-            document.getElementById('loader-screen').style.display = 'none';
-            initLogs();
-        }, 1000);
-    }, 2000);
-
-    renderGrid(destinations);
-    updateFavList();
-    renderBookings();
-    renderBookings();
-    addLog("System Initialized with Matrix Core.");
+        const loader = document.getElementById('loader-screen');
+        if (loader) {
+            loader.style.opacity = '0';
+            setTimeout(() => loader.style.display = 'none', 1000);
+        }
+    }, 2500);
 };
-function switchSystem(system) {
-    playSystemSound('click');
-    addLog("Switching to " + system + " system...");
-    // هنا يمكننا مستقبلاً ربط خرائط أو واجهات أخرى
-}
-/* ================= محرك البحث الذكي (Autocomplete) ================= */
-function filterGrid() {
-    const query = document.getElementById('search-box').value.trim().toLowerCase();
-    const suggestionsBox = document.getElementById('search-suggestions');
-    const sortType = document.getElementById('sort-select').value;
 
-    // إخفاء الاقتراحات إذا كان البحث فارغاً
+/* ==================== نظام البحث والتصفية المطور (Advanced Search) ==================== */
+
+function searchDestinations() {
+    // نستخدم الكلاسات الموحدة التي وضعناها في الـ CSS
+    const query = document.querySelector('.search-input').value.trim().toLowerCase();
+    const suggestionsBox = document.querySelector('.suggestions-box');
+    
     if (query.length < 1) {
         if (suggestionsBox) suggestionsBox.style.display = 'none';
-        renderGrid(destinations);
+        renderDestinations(destinations);
         return;
     }
 
-    // تصفية الوجهات بناءً على الاسم، الوصف، أو النوع
-    let filtered = destinations.filter(d => 
+    const filtered = destinations.filter(d => 
         d.name.toLowerCase().includes(query) || 
-        d.desc.toLowerCase().includes(query) ||
-        d.type.toLowerCase().includes(query)
+        d.type.toLowerCase().includes(query) ||
+        d.desc.toLowerCase().includes(query)
     );
 
-    // عرض صندوق الاقتراحات الذكي تحت البحث
-    if (suggestionsBox) {
-        suggestionsBox.innerHTML = "";
+    renderDestinations(filtered);
+
+    // تحديث صندوق الاقتراحات الذكي
+    if (suggestionsBox && filtered.length > 0) {
         suggestionsBox.style.display = 'block';
-        
-        filtered.slice(0, 5).forEach(d => {
-            const div = document.createElement('div');
-            div.className = 'suggestion-item';
-            div.innerHTML = `<span>📍 ${d.name}</span> <small>${d.type}</small>`;
-            div.onclick = () => {
-                document.getElementById('search-box').value = d.name;
-                suggestionsBox.style.display = 'none';
-                renderGrid([d]);
-                playSystemSound('click');
-            };
-            suggestionsBox.appendChild(div);
-        });
-    }
-
-    // منطق الترتيب (الأسعار والأمان)
-    if(sortType === 'price-asc') filtered.sort((a,b) => a.price - b.price);
-    if(sortType === 'risk-low') filtered.sort((a,b) => a.risk - b.risk);
-
-    renderGrid(filtered);
-}
-
-/* ================= محرك العروض الساخنة (Hot Deals Engine) ================= */
-let hotDealsIds = [];
-
-function applyHotDeals() {
-    // اختيار 3 وجهات عشوائية لتكون عروضاً ساخنة
-    const shuffled = [...destinations].sort(() => 0.5 - Math.random());
-    hotDealsIds = shuffled.slice(0, 3).map(d => d.id);
-    addLog("محرك العروض: تم تحديث 3 عروض حصرية الآن.");
-}
-
-function renderGrid(data) {
-    const container = document.getElementById('grid-container');
-    container.innerHTML = "";
-    
-    data.forEach(dest => {
-        const isFav = favorites.includes(dest.id);
-        const favClass = isFav ? "active" : "";
-        const isHot = hotDealsIds.includes(dest.id);
-        
-        // حساب السعر بعد الخصم (30%) إذا كانت الوجهة عرضاً ساخناً
-        const finalPrice = isHot ? Math.floor(dest.price * 0.7) : dest.price;
-        
-        container.innerHTML += `
-            <div class="trip-card" onmouseenter="playSystemSound('hover')">
-                ${isHot ? '<div class="hot-deal-tag">عرض خاص</div>' : ''}
-                <button class="fav-btn ${favClass}" onclick="toggleFav('${dest.id}')">♥</button>
-                <div class="card-header">
-                    <span class="card-badge">${dest.type}</span>
-                    <div class="card-price">
-                        ${isHot ? `<span class="price-old">${dest.price}</span>` : ''}
-                        <span class="${isHot ? 'price-new' : ''}">${finalPrice.toLocaleString()} ر.س</span>
-                    </div>
-                </div>
-                <h3 class="card-title">${dest.name}</h3>
-                <p style="color:#aaa; font-size:0.9rem; flex-grow:1;">${dest.desc}</p>
-                <button class="btn-select" onclick="openModal('${dest.id}')">تفاصيل المسار</button>
+        suggestionsBox.innerHTML = filtered.slice(0, 5).map(d => `
+            <div class="suggestion-item" onclick="quickSelect('${d.name}')">
+                <span>📍 ${d.name}</span>
+                <small>${d.type}</small>
             </div>
-        `;
-    });
-}
-
-function toggleFav(id) {
-    playSystemSound('click');
-    if(favorites.includes(id)) {
-        favorites = favorites.filter(fav => fav !== id);
+        `).join('');
     } else {
-        favorites.push(id);
+        if (suggestionsBox) suggestionsBox.style.display = 'none';
     }
-    localStorage.setItem('nourbest_favs', JSON.stringify(favorites));
-    renderGrid(destinations); 
-    applyHotDeals(); // تشغيل محرك العروض العشوائية
-    renderGrid(destinations); // إعادة الريندر لتظهر العروض
-    updateFavList();
 }
 
-function updateFavList() {
-    const list = document.getElementById('fav-list');
-    const count = document.getElementById('fav-count');
-    list.innerHTML = "";
-    count.innerText = favorites.length;
+function quickSelect(name) {
+    playSystemSound('click');
+    document.querySelector('.search-input').value = name;
+    document.querySelector('.suggestions-box').style.display = 'none';
+    searchDestinations();
+}
 
-    if(favorites.length === 0) {
-        list.innerHTML = '<div style="text-align:center; color:#555; margin-top:20px;">المحفظة فارغة</div>';
-        return;
-    }
+/* ================= محرك التصفية المطور (Advanced Filtering) ================= */
+function filterCategory(cat) {
+    playSystemSound('click');
+    const filtered = cat === 'all' ? destinations : destinations.filter(d => d.category === cat);
+    renderDestinations(filtered);
+    addLog(`تم تفعيل فلتر: ${cat}`);
+}
 
-    favorites.forEach(id => {
-        const item = destinations.find(d => d.id === id);
-        list.innerHTML += `
-            <div class="fav-item">
-                <span>${item.name}</span>
-                <span class="fav-remove" onclick="toggleFav('${id}')">×</span>
-            </div>
-        `;
+/* ================= تحديث واجهة الرصيد والمحفظة ================= */
+function updateVaultUI() {
+    // حفظ الرصيد الجديد في ذاكرة المتصفح لضمان عدم ضياعه بعد التحديث
+    localStorage.setItem('nour_coin_balance', nourCoinBalance.toFixed(2));
+    
+    // تحديث الأرقام الظاهرة في كل مكان (القائمة الجانبية + المحفظة الرقمية)
+    const balances = document.querySelectorAll('.vault-balance, #nour-balance');
+    balances.forEach(el => {
+        el.innerText = nourCoinBalance.toFixed(2) + " NC";
     });
+
+    // سطر الإضافة: إظهار العملية في نافذة الأوامر (Terminal)
+    if (typeof addLog === 'function') {
+        addLog("Vault Synced: تم مزامنة الرصيد وتحديث المحفظة.");
+    }
 }
 
 function addLog(msg) {
@@ -516,68 +691,26 @@ function updateVaultUI() {
     }
 }
 
-// ================= دالة الفلاتر السريعة (طيران، فنادق، سيارات) =================
-/* ================= نظام الفلترة الذكي حسب نوع الوجهة ================= */
-function filterType(category) {
-    playSystemSound('click');
-    addLog("تم تفعيل فلتر: " + category);
+/* ================= وظائف النظام الذكية (OS Core Utils) ================= */
 
-    let filtered;
-    if (category === 'flight') {
-        filtered = destinations.filter(d => d.type === "عاصمة" || d.type === "عالمية" || d.type === "تقنية");
-    } else if (category === 'hotel') {
-        filtered = destinations.filter(d => d.type === "استجمام" || d.type === "رومانسية" || d.type === "ساحلية");
-    } else if (category === 'car') {
-        filtered = destinations.filter(d => d.type === "تاريخية" || d.type === "تراثية" || d.type === "طبيعة");
-    }
-
-    renderGrid(filtered);
-    addLog(`تم العثور على ${filtered.length} وجهة مطابقة.`);
-}
-
-// ================= دالة الساعة العالمية (لتعمل الساعة في شريط الحالة) =================
-
-// دالة مسح نص البحث وإعادة عرض كل الوجهات
-function clearFilters() {
-    playSystemSound('click');
-    document.getElementById('search-box').value = ""; 
-    document.getElementById('sort-select').value = "default"; 
-    renderGrid(destinations); 
-    addLog("Search Cleared: All nodes restored.");
-}
-// ================= وظائف النظام الموحدة =================
-
+// 1. تحديث الساعة والطقس بشكل متوافق
 function updateClock() {
-    const now = new Date();
-    // استخدام التوقيت المحلي للمستخدم
-    const timeString = now.toLocaleTimeString('ar-SA', { hour12: true });
-    const clockElement = document.getElementById('universal-clock');
-    if (clockElement) clockElement.innerText = timeString;
+    const el = document.getElementById('universal-clock');
+    if (el) el.innerText = new Date().toLocaleTimeString('ar-SA', { hour12: true });
 }
-
 setInterval(updateClock, 1000);
-// ================= نظام الطقس الذكي وتغيير الثيم =================
-async function updateWeather() {
-    // محاكاة جلب بيانات الطقس (يمكنك لاحقاً ربطها بـ API حقيقي)
-    const cities = ["الرياض", "لندن", "باريس", "نيويورك", "طوكيو"];
-    const randomCity = cities[Math.floor(Math.random() * cities.length)];
-    const temp = Math.floor(Math.random() * (45 - 5 + 1)) + 5; // درجة حرارة عشوائية بين 5 و 45
 
-    const weatherWidget = document.getElementById('weather-widget');
-    if (weatherWidget) {
-        weatherWidget.innerHTML = `<i class="fas fa-temperature-high"></i> <span>${temp}°C - ${randomCity}</span>`;
-        
-        // تغيير ثيم النظام بناءً على الحرارة
-        if (temp > 30) {
-            document.documentElement.style.setProperty('--neon-blue', '#ff8c00'); // ثيم حار (برتقالي)
-            addLog("نظام الطقس: تحويل النظام للنمط الصيفي (الحار).");
-        } else if (temp < 15) {
-            document.documentElement.style.setProperty('--neon-blue', '#00f3ff'); // ثيم بارد (أزرق نيون)
-            addLog("نظام الطقس: تحويل النظام للنمط الشتوي (البارد).");
-        }
-    }
+async function updateWeather() {
+    const cities = ["الرياض", "لندن", "باريس", "طوكيو"];
+    const temp = Math.floor(Math.random() * 30) + 10;
+    const el = document.getElementById('weather-widget');
+    if (el) el.innerHTML = `<i class="fas fa-sun"></i> ${temp}°C - ${cities[0]}`;
 }
-// تحديث الطقس كل 30 ثانية
-setInterval(updateWeather, 30000);
-updateWeather(); // تشغيل أولي عند التحميل
-window.onresize = () => initMatrix();
+setInterval(updateWeather, 60000);
+
+// 2. ربط الطبقة الشفافة (Overlay) لإغلاق القائمة
+const sidebarOverlay = document.querySelector('.sidebar-overlay');
+if (sidebarOverlay) sidebarOverlay.onclick = () => toggleSidebar();
+
+// 3. تحديث حجم الماتريكس عند تغيير حجم الشاشة
+window.onresize = () => { if (typeof initMatrix === "function") initMatrix(); };
