@@ -1086,11 +1086,21 @@ function initAAAGame() {
     setupAAAStars();
 
     window.addEventListener('keydown', (e) => {
-        if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'].includes(e.code)) {
+        const controlKeys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'];
+        const isControlKey = controlKeys.includes(e.code);
+        const target = e.target;
+        const isFormElement = target instanceof HTMLElement && (
+            target.isContentEditable ||
+            ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName)
+        );
+
+        if (!isControlKey || isFormElement) return;
+
+        if (aaaGame.running && !aaaGame.paused) {
             e.preventDefault();
+            aaaGame.keys[e.code] = true;
+            if (e.code === 'Space') fireAAABullet();
         }
-        aaaGame.keys[e.code] = true;
-        if (e.code === 'Space' && aaaGame.running && !aaaGame.paused) fireAAABullet();
     }, { passive: false });
 
     window.addEventListener('keyup', (e) => {
@@ -1115,6 +1125,7 @@ function startAAAGame() {
     if (!aaaGame.canvas) initAAAGame();
     if (!aaaGame.canvas) return;
     if (aaaGame.running && !aaaGame.paused) return;
+    if (!aaaGame.running) resetAAAGame();
 
     aaaGame.running = true;
     aaaGame.paused = false;
