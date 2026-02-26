@@ -1,218 +1,143 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NourBest OS 2050 | Ultimate Edition</title>
-    <meta name="description" content="NourBest OS 2050 - منصة حجز السفر المستقبلية. استكشف أكثر من 20 وجهة كونية و40 ألف مطار حول العالم بتقنيات النيون والمصفوفة.">
-<meta name="keywords" content="NourBest OS, حجز طيران, سفر مستقبلي, مطارات العالم, رحلات كوانتم, سياحة 2050">
-<meta name="author" content="Nour">
-
-<meta property="og:title" content="NourBest OS 2050 | المركز القيادي">
-<meta property="og:description" content="بوابتك الرقمية للسفر حول المجرة. احجز رحلتك الآن عبر نظام تشغيل السفر الأول من نوعه.">
-<meta property="og:type" content="website">
-<link rel="icon" type="image/png" href="favicon.png">
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;700;800;900&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
-    <link rel="stylesheet" href="./style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>عباية نور | متجر عبايات سعودي فاخر</title>
+  <meta name="description" content="متجر عباية نور لبيع العبايات اليومية والفاخرة مع مقاسات متنوعة، شحن سريع، ودفع آمن داخل السعودية." />
+  <meta name="theme-color" content="#7b2e42" />
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <header class="topbar">
+    <p>شحن مجاني للطلبات فوق 299 ر.س داخل السعودية</p>
+    <button id="open-cart" class="cart-btn" aria-label="فتح سلة المشتريات">السلة (<span id="cart-count">0</span>)</button>
+  </header>
 
-    <canvas id="matrix-bg"></canvas>
+  <nav class="navbar" aria-label="التنقل الرئيسي">
+    <h1>عباية نور</h1>
+    <ul>
+      <li><a href="#products">المنتجات</a></li>
+      <li><a href="#about">من نحن</a></li>
+      <li><a href="#faq">الأسئلة الشائعة</a></li>
+      <li><a href="#contact">تواصل معنا</a></li>
+    </ul>
+  </nav>
 
-    <div class="top-status-bar">
-        <div class="status-item"><span class="pulse-dot"></span> GDS Connected</div>
-        <div class="status-item" id="universal-clock">UTC: 00:00:00</div>
-        <div class="status-item"><i class="fas fa-wifi"></i> 1.2 Gbps</div>
-        <div class="menu-trigger" onclick="toggleSidebar()" id="mobile-toggle"><i class="fas fa-bars"></i></div>
+  <main>
+    <section class="hero" aria-label="واجهة المتجر">
+      <div>
+        <p class="badge">تشكيلة 2026</p>
+        <h2>أناقة عصرية بلمسة محتشمة</h2>
+        <p>اختاري من تشكيلة عبايات يومية، عملية، ومناسبة للسهرات بتفاصيل فاخرة وجودة عالية.</p>
+        <div class="hero-actions">
+          <a href="#products" class="primary-btn">تسوقي الآن</a>
+          <a href="https://wa.me/966500000000" target="_blank" rel="noopener" class="secondary-btn">اطلبي عبر واتساب</a>
+        </div>
+      </div>
+      <div class="hero-card">
+        <h3>لماذا عباية نور؟</h3>
+        <ul>
+          <li>✔ خامات عملية ومريحة لجميع المواسم</li>
+          <li>✔ تفصيل دقيق ومقاسات متنوعة</li>
+          <li>✔ استبدال واسترجاع خلال 7 أيام</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="features">
+      <article><h3>دفع آمن</h3><p>مدى، فيزا، ماستر كارد، Apple Pay.</p></article>
+      <article><h3>توصيل سريع</h3><p>من 2 إلى 4 أيام عمل داخل المملكة.</p></article>
+      <article><h3>خدمة عملاء</h3><p>دعم يومي من 10 صباحًا إلى 10 مساءً.</p></article>
+    </section>
+
+    <section class="products-section" id="products">
+      <div class="section-title-row">
+        <h2>منتجاتنا</h2>
+        <div class="filters">
+          <label class="sr-only" for="search">بحث</label>
+          <input type="search" id="search" placeholder="ابحثي عن عباية..." />
+          <label class="sr-only" for="category-filter">الفئة</label>
+          <select id="category-filter">
+            <option value="all">كل الفئات</option>
+            <option value="daily">عبايات يومية</option>
+            <option value="formal">عبايات مناسبات</option>
+            <option value="colored">عبايات ملونة</option>
+          </select>
+          <label class="sr-only" for="price-filter">السعر</label>
+          <select id="price-filter">
+            <option value="all">كل الأسعار</option>
+            <option value="low">أقل من 250 ر.س</option>
+            <option value="mid">250 - 450 ر.س</option>
+            <option value="high">أعلى من 450 ر.س</option>
+          </select>
+          <button id="reset-filters" class="reset-btn" type="button">إعادة ضبط</button>
+        </div>
+      </div>
+      <p class="stock-note">تم تحديث المخزون اليوم — الطلبات تؤكد خلال نفس اليوم.</p>
+      <div id="products-grid" class="products-grid"></div>
+    </section>
+
+    <section id="about" class="about">
+      <h2>من نحن</h2>
+      <p>
+        عباية نور متجر إلكتروني سعودي متخصص في تصميم وتوريد العبايات بجودة عالية وتفاصيل أنيقة.
+        نهدف لتقديم تجربة شراء سهلة، منتجات موثوقة، وخدمة ما بعد البيع تهتم براحتك.
+      </p>
+    </section>
+
+    <section class="testimonials">
+      <h2>آراء عميلاتنا</h2>
+      <div class="testimonial-grid">
+        <blockquote>"الخامة ممتازة والتفصيل أنيق جدًا، وصلتني خلال يومين." <span>— ريم، الرياض</span></blockquote>
+        <blockquote>"تعامل راقي وسرعة في الرد، أكيد بطلب مرة ثانية." <span>— أمل، جدة</span></blockquote>
+        <blockquote>"المقاسات دقيقة والتغليف مرتب، شكراً لكم." <span>— جود، الدمام</span></blockquote>
+      </div>
+    </section>
+
+    <section id="faq" class="faq">
+      <h2>الأسئلة الشائعة</h2>
+      <details><summary>هل يوجد استبدال أو استرجاع؟</summary><p>نعم، خلال 7 أيام بشرط أن تكون العباية بحالتها الأصلية.</p></details>
+      <details><summary>هل أقدر أطلب تفصيل خاص؟</summary><p>نعم، متاح تفصيل لبعض الموديلات عبر واتساب المتجر.</p></details>
+      <details><summary>ما هي مدة التوصيل؟</summary><p>داخل المدن الرئيسية 2-4 أيام عمل، وقد تزيد للمناطق البعيدة.</p></details>
+    </section>
+
+    <section id="contact" class="contact">
+      <h2>تواصلي معنا</h2>
+      <form id="contact-form">
+        <input id="contact-name" type="text" placeholder="الاسم الكامل" minlength="3" required />
+        <input id="contact-email" type="email" placeholder="البريد الإلكتروني" required />
+        <textarea id="contact-message" placeholder="رسالتك" rows="4" minlength="10" required></textarea>
+        <button type="submit">إرسال</button>
+      </form>
+    </section>
+  </main>
+
+  <div id="cart-overlay" class="cart-overlay" hidden></div>
+  <aside id="cart-drawer" class="cart-drawer" aria-hidden="true">
+    <div class="cart-header">
+      <h3>سلة المشتريات</h3>
+      <button id="close-cart" aria-label="إغلاق السلة">✕</button>
     </div>
-
-<div id="splash-screen">
-    <div class="sky-container">
-        <div class="plane-wrapper">
-            <i class="fas fa-plane"></i>
-        </div>
-        <div class="clouds">
-            <i class="fas fa-cloud cloud-1"></i>
-            <i class="fas fa-cloud cloud-2"></i>
-        </div>
+    <div id="cart-items" class="cart-items"></div>
+    <div class="cart-footer">
+      <p>الإجمالي: <strong id="cart-total">0 ر.س</strong></p>
+      <button id="checkout-btn">إتمام الطلب</button>
+      <a id="whatsapp-checkout" class="wa-checkout" target="_blank" rel="noopener">إرسال الطلب عبر واتساب</a>
     </div>
-    <h1 class="splash-logo">NourBest<span>OS</span></h1>
-    <div class="takeoff-bar"></div>
-</div>
+  </aside>
 
-    <div class="modal-overlay" id="booking-modal">
-        <div class="modal-box">
-            <h2 id="modal-title">...</h2>
-            
-            <div class="journey-timeline">
-                <div class="timeline-step active"><i class="fas fa-plane"></i></div>
-                <div class="timeline-line"></div>
-                <div class="timeline-step"><i class="fas fa-hotel"></i></div>
-                <div class="timeline-line"></div>
-                <div class="timeline-step"><i class="fas fa-car"></i></div>
-            </div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-            <div id="integration-details" class="modal-info-grid">
-                <div class="info-card" id="hotel-info"><i class="fas fa-bed"></i> <span>جاري جلب الفنادق...</span></div>
-                <div class="info-card" id="car-info"><i class="fas fa-key"></i> <span>جاري ربط التأجير...</span></div>
-                <div class="info-card" id="map-preview"><i class="fas fa-map-marked-alt"></i> <span>معاينة الخريطة</span></div>
-            </div>
+  <footer>
+    <p>© 2026 عباية نور - جميع الحقوق محفوظة</p>
+    <p>واتساب الطلبات: <a href="https://wa.me/966500000000" target="_blank" rel="noopener">+966 50 000 0000</a></p>
+  </footer>
 
-            <p id="modal-desc">...</p>
-
-            <div class="digital-ticket">
-                <div class="qr-placeholder"><i class="fas fa-qrcode"></i></div>
-                <div class="ticket-id">NB-OS-2050-XXXX</div>
-            </div>
-
-            <div class="modal-actions">
-                <button onclick="closeModal()" class="btn-cancel">إلغاء</button>
-                <button onclick="finalConfirm()" class="btn-confirm">تأكيد الحجز المتكامل</button>
-            </div>
-        </div>
-    </div>
-
-    <aside class="sidebar">
-        <div class="user-profile-box">
-    <div class="user-main">
-        <div class="user-avatar-circle">
-            <i class="fas fa-user"></i>
-        </div>
-        <div class="user-welcome">
-            <div class="welcome-text">حياك الله،</div>
-            <div class="user-display-name">ضيفنا العزيز</div>
-        </div>
-    </div>
-    <div class="auth-links">
-        <a href="#" class="auth-btn">تسجيل الدخول</a>
-        <span class="divider">|</span>
-        <a href="#" class="auth-btn secondary">إنشاء حساب جديد</a>
-    </div>
-</div>
-
-        <div class="brand-box">
-            <h1 class="brand-title">NOURBEST OS</h1>
-            <div class="brand-sub">ULTIMATE EDITION</div>
-        </div>
-<nav class="system-nav">
-   <div class="nav-item active"><i class="fas fa-th-large"></i> الرئيسية</div>
-    <div class="nav-item"><i class="fas fa-plane-departure"></i> جدول الرحلات</div>
-    <div class="nav-item"><i class="fas fa-map-marked-alt"></i> خريطة النودز</div>
-    <div class="nav-item"><i class="fas fa-history"></i> سجل العمليات</div>
-    <div class="nav-item"><i class="fas fa-cog"></i> إعدادات النظام</div>
-</nav>
-        <div class="system-widgets">
-            <div class="widget" id="weather-widget">
-                <i class="fas fa-sync-alt fa-spin"></i> <span>جاري جلب الطقس...</span>
-            </div>
-            <div class="widget" id="currency-widget">
-                <i class="fas fa-coins"></i> <span>1 USD = 3.75 SAR</span>
-            </div>
-            <div class="widget emergency" title="طوارئ عالمية">
-                <i class="fas fa-phone-alt"></i> <span>مركز الطوارئ</span>
-            </div>
-        </div>
-
-        <div class="digital-vault">
-            <div class="vault-title">رصيد NourCoin الحالي: <span id="nour-balance" style="color:var(--neon-gold); font-family:var(--font-tech);">500.00</span> NC</div>
-            <div class="vault-title"><i class="fas fa-shield-alt"></i> المحفظة الرقمية</div>
-            <div class="vault-items">
-                <i class="fas fa-id-card" title="التأشيرات"></i>
-                <i class="fas fa-file-medical" title="الشهادات الصحية"></i>
-                <i class="fas fa-key" title="مفاتيح الفنادق"></i>
-            </div>
-        </div>
-
-        <div class="favorites-section">
-            <div class="fav-title">
-                <span>⭐ المحفظة الكونية</span>
-                <span id="fav-count">0</span>
-            </div>
-            <div id="fav-list">
-                <div style="text-align:center; color:#555; margin-top:20px;">لا توجد رحلات محفوظة</div>
-            </div>
-        </div>
-
-        <div class="bookings-section">
-            <div class="fav-title">✈️ حجوزاتي الحالية</div>
-            <div id="bookings-list">
-                <div style="text-align:center; color:#555; margin-top:20px;">جاري تحميل التذاكر...</div>
-            </div>
-        </div>
-
-        <div class="log-title">> سياقية الأداء:</div>
-        <div class="terminal-window" id="terminal"></div>
-    </aside>
-
-    <main class="main-wrapper">
-        <div id="google_translate_element"><i class="fas fa-language" style="color:var(--neon-blue); margin-right: 8px;"></i></div>
-        
-        <div class="header-section">
-    <h1 class="header-title">وجهتك القادمة تبدأ من هنا</h1>
-    <p class="header-desc">
-        استكشف آلاف الرحلات والفنادق حول العالم بأفضل الأسعار المضمونة.
-    </p>
-</div>
-
-        <div class="control-bar">
-            <div class="search-wrapper">
-                <span style="font-size:1.2rem; color: var(--neon-blue);">🔍</span>
-                <input type="text" class="search-input" id="search-box" list="airports-list" placeholder="ابحث عن مطار، وجهة، أو فندق..." onkeyup="filterGrid()">
-                <div id="search-suggestions" class="suggestions-box"></div>
-                <datalist id="airports-list">
-                    <option value="JED - مطار الملك عبدالعزيز الدولي">
-                    <option value="RUH - مطار الملك خالد الدولي">
-                    <option value="DXB - مطار دبي الدولي">
-                    <option value="LHR - مطار هيثرو لندن">
-                    <option value="JFK - مطار جون كينيدي">
-                    <option value="HND - مطار طوكيو هانيدا">
-                    <option value="CDG - مطار شارل ديغول">
-                </datalist>
-            </div>
-
-            <div class="quick-filters">
-                <button onclick="clearFilters()" title="إعادة ضبط"><i class="fas fa-sync-alt"></i></button>
-                <button onclick="filterType('flight')" title="طيران"><i class="fas fa-plane"></i></button>
-                <button onclick="filterType('hotel')" title="فنادق"><i class="fas fa-hotel"></i></button>
-                <button onclick="filterType('car')" title="سيارات"><i class="fas fa-car"></i></button>
-            </div>
-            
-            <select class="filter-select" id="sort-select" onchange="filterGrid()">
-                <option value="default">ترتيب ذكي</option>
-                <option value="price-asc">السعر: من الأقل</option>
-                <option value="risk-low">الأمان: الأكثر أماناً</option>
-            </select>
-        </div>
-
-        <div class="trips-grid" id="grid-container"></div>
-        
-        <footer class="main-footer">
-            <div class="connectivity-info">
-                <span class="status-online"></span> Global GDS Systems: Active | Nodes: 1024
-            </div>
-            &copy; 2050 NourBest OS. All Galactic Rights Reserved.
-        </footer>
-    </main>
-
-    <script src="./app.js"></script>
-    <button id="back-to-top" class="back-to-top"><i class="fas fa-chevron-up"></i></button>
-    <script type="text/javascript">
-  function googleTranslateElementInit() {
-            new google.translate.TranslateElement({
-                pageLanguage: 'ar',
-                includedLanguages: 'en,zh-CN,es,fr,de,ja,ru,pt,it,ko,tr,hi,bn,te,mr,ta,ur,gu,kn,ml,pa,th,id,nl,el,pl,sv,no,da,fi,he,cs,hu,ro,uk,bg,hr,sk,sl,et,lt,lv,ms,sq,bs,mk,sr,hy,ka,az,uz,kk,tk,ky,tg,mn,km,lo,my,ne,si,am,sw,zu,xh,yo,ig,ha,af,is,ga,mt,cy,gd,gl,eu,ca,fy,lb,eo,la',
-                autoDisplay: false
-            }, 'google_translate_element');
-        }
-    </script>
-    
-    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
+  <script src="app.js"></script>
 </body>
 </html>
