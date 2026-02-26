@@ -16,9 +16,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;700;800;900&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
+
     <link rel="stylesheet" href="./style.css">
 </head>
 <body>
@@ -49,7 +49,7 @@
     <div class="modal-overlay" id="booking-modal">
         <div class="modal-box">
             <h2 id="modal-title">...</h2>
-            
+
             <div class="journey-timeline">
                 <div class="timeline-step active"><i class="fas fa-plane"></i></div>
                 <div class="timeline-line"></div>
@@ -152,7 +152,7 @@
 
     <main class="main-wrapper">
         <div id="google_translate_element"><i class="fas fa-language" style="color:var(--neon-blue); margin-right: 8px;"></i></div>
-        
+
         <div class="header-section">
     <h1 class="header-title">وجهتك القادمة تبدأ من هنا</h1>
     <p class="header-desc">
@@ -182,7 +182,7 @@
                 <button onclick="filterType('hotel')" title="فنادق"><i class="fas fa-hotel"></i></button>
                 <button onclick="filterType('car')" title="سيارات"><i class="fas fa-car"></i></button>
             </div>
-            
+
             <select class="filter-select" id="sort-select" onchange="filterGrid()">
                 <option value="default">ترتيب ذكي</option>
                 <option value="price-asc">السعر: من الأقل</option>
@@ -191,7 +191,25 @@
         </div>
 
         <div class="trips-grid" id="grid-container"></div>
-        
+
+
+        <section class="aaa-lite-section" id="aaa-lite">
+            <div class="aaa-lite-header">
+                <h2>🎮 تجربة AAA Lite: Neon Strike</h2>
+                <p>طور أكشن خفيف مصمم ليشتغل بسلاسة على أجهزة i3 بدون الضغط على المعالج.</p>
+                <span class="aaa-lite-badge">i3 Optimized · 2D Canvas</span>
+            </div>
+            <div class="aaa-lite-panel">
+                <canvas id="aaa-game-canvas" width="720" height="360" aria-label="AAA Lite Game Canvas"></canvas>
+                <div class="aaa-lite-controls">
+                    <button onclick="startAAAGame()"><i class="fas fa-play"></i> بدء الجولة</button>
+                    <button onclick="toggleAAAPause()"><i class="fas fa-pause"></i> إيقاف/متابعة</button>
+                    <button onclick="resetAAAGame()"><i class="fas fa-rotate-right"></i> إعادة</button>
+                </div>
+                <div class="aaa-lite-hint">التحكم: الأسهم للحركة، مسطرة المسافة للإطلاق. الأداء يتكيف تلقائيًا حسب حجم الشاشة.</div>
+            </div>
+        </section>
+
         <footer class="main-footer">
             <div class="connectivity-info">
                 <span class="status-online"></span> Global GDS Systems: Active | Nodes: 1024
@@ -211,7 +229,7 @@
             }, 'google_translate_element');
         }
     </script>
-    
+
     <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
 </body>
