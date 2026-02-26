@@ -109,15 +109,15 @@ const destinations = [
 destinations.forEach((dest, index) => {
     // توزيع التصنيفات
     dest.category = (index < 35) ? "local" : "global";
-    
+
     // توليد تقييمات واقعية (من 4.4 إلى 5.0)
     dest.rating = (4.4 + Math.random() * 0.6).toFixed(1);
-    
+
     // محرك الصور: جلب صور سفر احترافية من Unsplash بناءً على اسم الوجهة
     // تم تحسين الكلمات المفتاحية لضمان صور سياحية فخمة
     const searchKeyword = index < 35 ? `${dest.name},Saudi Arabia,cityscape` : `${dest.name},travel,landmark`;
     dest.image = `https://source.unsplash.com/600x400/?${encodeURIComponent(searchKeyword)}`;
-    
+
     // ضمان وجود مستوى الخطر
     if (dest.risk === undefined) dest.risk = 0;
 });
@@ -135,33 +135,33 @@ let bookingData = { flight: 0, hotel: 0, car: 0, total: 0 };
 function renderDestinations(list) {
     const grid = document.querySelector('.trips-grid');
     if (!grid) return;
-    
+
     grid.innerHTML = ""; // تنظيف الشبكة
 
     list.forEach(dest => {
         const isFav = favorites.includes(dest.id);
         const riskClass = dest.risk === 2 ? 'emergency' : (dest.risk === 1 ? 'warning' : 'safe');
-        
+
         const card = `
             <div class="trip-card" data-id="${dest.id}">
                 ${dest.price > 4000 ? '<div class="hot-deal-tag">VIP CHOICE</div>' : ''}
-                
+
                 <div class="fav-btn ${isFav ? 'active' : ''}" onclick="toggleFavorite('${dest.id}')">
                     <i class="fa-${isFav ? 'solid' : 'regular'} fa-heart"></i>
                 </div>
-                
+
                 <div style="height: 200px; overflow:hidden; border-radius: 20px; margin-bottom: 15px;">
                     <div style="height: 100%; width: 100%; background: url('${dest.image}') center/cover; transition: 0.5s transform;" class="card-img-zoom"></div>
                 </div>
-                
+
                 <div class="card-header">
                     <span class="card-badge">${dest.type}</span>
                     <span class="card-price">${dest.price.toLocaleString()} NC</span>
                 </div>
-                
+
                 <h3 class="card-title">${dest.name}</h3>
                 <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 15px; line-height: 1.6;">${dest.desc}</p>
-                
+
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                     <div style="color: var(--accent-gold); font-weight: 800; font-size: 0.9rem;">
                         <i class="fas fa-star"></i> ${dest.rating}
@@ -170,7 +170,7 @@ function renderDestinations(list) {
                         <i class="fas fa-shield-halved"></i> مستوى الأمان: ${dest.risk === 0 ? 'مرتفع' : 'متوسط'}
                     </div>
                 </div>
-                
+
                 <button class="btn-select" onclick="startBooking('${dest.id}')">
                     <i class="fas fa-paper-plane"></i> حجز الرحلة الآن
                 </button>
@@ -202,7 +202,7 @@ window.onload = () => {
         if (splash) {
             splash.style.opacity = '0';
             splash.style.transform = 'scale(1.1)'; // تأثير تمدد عند الدخول
-            
+
             setTimeout(() => {
                 splash.style.display = 'none';
                 addLog("NourBest Travel: تم تأكيد إقلاع النظام بنجاح.");
@@ -216,7 +216,7 @@ window.onload = () => {
 function toggleFavorite(id) {
     playSystemSound('hover'); // تأثير صوتي ناعم
     const index = favorites.indexOf(id);
-    
+
     if (index > -1) {
         favorites.splice(index, 1);
         showToast("تمت إزالة الوجهة من رحلاتك المفضلة", "info");
@@ -227,7 +227,7 @@ function toggleFavorite(id) {
         playSystemSound('success'); // صوت نجاح عند الإضافة
         addLog(`Fav System: تم حفظ الوجهة [${id}] بنجاح.`);
     }
-    
+
     localStorage.setItem('nourbest_favs', JSON.stringify(favorites));
     renderDestinations(destinations); // تحديث الواجهة فوراً
 }
@@ -237,10 +237,10 @@ function searchDestinations() {
     const searchInput = document.querySelector('.search-input');
     const query = searchInput.value.trim().toLowerCase();
     const suggestions = document.querySelector('.suggestions-box');
-    
+
     // تصفية الوجهات بناءً على الاسم، النوع، أو الوصف
-    const filtered = destinations.filter(dest => 
-        dest.name.toLowerCase().includes(query) || 
+    const filtered = destinations.filter(dest =>
+        dest.name.toLowerCase().includes(query) ||
         dest.type.toLowerCase().includes(query) ||
         dest.desc.toLowerCase().includes(query)
     );
@@ -262,7 +262,7 @@ function searchDestinations() {
     } else {
         suggestions.style.display = 'none';
     }
-    
+
     if (query.length > 0) addLog(`Search Engine: جاري البحث عن "${query}"...`);
 }
 
@@ -290,10 +290,10 @@ function filterCategory(cat) {
             logMsg = "تم تفعيل فلتر: الرحلات الاقتصادية.";
             break;
     }
-    
+
     renderDestinations(result);
     addLog(`Filter System: ${logMsg}`);
-    
+
     // إغلاق السايدبار في الجوال بتأثير انسيابي
     const sidebar = document.querySelector('.sidebar');
     const overlay = document.querySelector('.sidebar-overlay');
@@ -305,7 +305,7 @@ function filterCategory(cat) {
 function quickSelect(name) {
     const searchInput = document.querySelector('.search-input');
     const suggestions = document.querySelector('.suggestions-box');
-    
+
     searchInput.value = name;
     suggestions.style.display = 'none';
     playSystemSound('click');
@@ -321,17 +321,17 @@ function startBooking(id) {
 
     currentSelection = dest;
     // تجهيز بيانات الحجز: السعر الأساسي للوجهة + الخيارات الإضافية
-    bookingData = { 
+    bookingData = {
         basePrice: dest.price,
-        flight: 0, 
-        hotel: 0, 
-        car: 0, 
+        flight: 0,
+        hotel: 0,
+        car: 0,
         total: dest.price,
         flightLabel: "الاقتصادية",
         hotelLabel: "بدون إقامة",
         carLabel: "بدون سيارة"
     };
-    
+
     currentStep = 1;
     document.querySelector('.modal-overlay').classList.add('active');
     addLog(`Booking: بدأت عملية الحجز لوجهة [${dest.name}].`);
@@ -342,7 +342,7 @@ function startBooking(id) {
 function renderBookingStep() {
     const modalBox = document.querySelector('.modal-box');
     const steps = [1, 2, 3, 4]; // 4 خطوات: طيران، سكن، مواصلات، ملخص
-    
+
     let content = `
         <h2 class="brand-title" style="color: var(--primary-blue); font-size: 1.4rem;">رحلتك إلى ${currentSelection.name}</h2>
         <div class="journey-timeline">
@@ -441,7 +441,7 @@ function applyOption(type, price, label) {
 function completeBooking(finalTotal) {
     if (nourCoinBalance >= finalTotal) {
         nourCoinBalance -= finalTotal;
-        
+
         // إنشاء سجل الحجز
         const newBooking = {
             id: "NB-" + Math.floor(Math.random() * 90000),
@@ -449,10 +449,10 @@ function completeBooking(finalTotal) {
             total: finalTotal,
             date: new Date().toLocaleDateString('ar-SA')
         };
-        
+
         bookings.push(newBooking);
         localStorage.setItem('nourbest_bookings', JSON.stringify(bookings));
-        
+
         updateBalanceUI();
         playSystemSound('success');
         showToast("تم تأكيد حجزك بنجاح! رحلة سعيدة.", "success");
@@ -501,19 +501,19 @@ function initMatrix() {
 
 const drawMatrix = () => {
     if (!ctx) return;
-    
+
     // خلفية فاتحة جداً لراحة العين (تأثير التلاشي)
-    ctx.fillStyle = 'rgba(244, 247, 254, 0.1)'; 
+    ctx.fillStyle = 'rgba(244, 247, 254, 0.1)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
+
     // أزرق سماوي ناعم للرموز المتساقطة
-    ctx.fillStyle = 'rgba(0, 82, 212, 0.15)'; 
+    ctx.fillStyle = 'rgba(0, 82, 212, 0.15)';
     ctx.font = fontSize + 'px monospace';
 
     for(let i = 0; i < rainDrops.length; i++) {
         const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
         ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
-        
+
         // إعادة التعيين العشوائي لخلق حركة انسيابية
         if(rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {
             rainDrops[i] = 0;
@@ -531,7 +531,7 @@ if (canvas) {
 
 // 2. محرك التحكم في القائمة الجانبية (Sidebar Master)
 function toggleSidebar() {
-    playSystemSound('click'); 
+    playSystemSound('click');
     const sidebar = document.querySelector('.sidebar');
     const overlay = document.querySelector('.sidebar-overlay');
     const wrapper = document.querySelector('.main-wrapper');
@@ -540,12 +540,12 @@ function toggleSidebar() {
         const isActive = sidebar.classList.toggle('active');
         overlay.classList.toggle('active');
         document.body.classList.toggle('sidebar-open');
-        
+
         // إزاحة ذكية للمحتوى تعطي شعوراً بالعمق (Parallax Effect)
         if(window.innerWidth > 1100 && wrapper) {
             wrapper.style.transform = isActive ? "translateX(-20px)" : "translateX(0)";
         }
-        
+
         addLog(isActive ? "UI Master: تم فتح لوحة التحكم الجانبية." : "UI Master: تم إغلاق لوحة التحكم.");
     }
 }
@@ -574,7 +574,7 @@ function scrollToTop() {
 window.onload = () => {
     // 1. تشغيل المحرك البصري للماتريكس السماوي
     if (typeof initMatrix === "function") initMatrix();
-    
+
     // 2. تجهيز البيانات خلف الكواليس (لضمان سرعة الظهور)
     renderDestinations(destinations);
     updateBalanceUI();
@@ -591,7 +591,7 @@ window.onload = () => {
         "Security: System Encryption [ACTIVE].",
         `Welcome: ${greeting}. جاري تجهيز قمرة القيادة...`
     ];
-    
+
     let i = 0;
     const bootInterval = setInterval(() => {
         if (i < bootMsgs.length) {
@@ -606,15 +606,15 @@ window.onload = () => {
     setTimeout(() => {
         // نبحث عن الشاشة بالاسم الجديد أو القديم لضمان عدم حدوث خطأ
         const splash = document.getElementById('splash-screen') || document.getElementById('loader-screen');
-        
+
         if (splash) {
             playSystemSound('success'); // صوت "تنبيه" نجاح الإقلاع
-            
+
             // إضافة تأثيرات بصرية عند الخروج
             splash.style.transition = "all 1s cubic-bezier(0.65, 0, 0.35, 1)";
             splash.style.opacity = '0';
             splash.style.transform = 'scale(1.1) perspective(1000px) rotateX(5deg)';
-            
+
             setTimeout(() => {
                 splash.style.display = 'none';
                 addLog(`[READY] NourBest OS: Flight Confirmed. Enjoy your trip.`);
@@ -629,7 +629,7 @@ function searchDestinations() {
     const searchInput = document.querySelector('.search-input');
     const query = searchInput.value.trim().toLowerCase();
     const suggestionsBox = document.querySelector('.suggestions-box');
-    
+
     // إذا كان الحقل فارغاً، نعرض كل الوجهات ونخفي الاقتراحات
     if (query.length < 1) {
         if (suggestionsBox) suggestionsBox.style.display = 'none';
@@ -638,8 +638,8 @@ function searchDestinations() {
     }
 
     // تصفية ذكية تشمل الاسم، النوع، والوصف
-    const filtered = destinations.filter(d => 
-        d.name.toLowerCase().includes(query) || 
+    const filtered = destinations.filter(d =>
+        d.name.toLowerCase().includes(query) ||
         d.type.toLowerCase().includes(query) ||
         d.desc.toLowerCase().includes(query)
     );
@@ -671,10 +671,10 @@ function quickSelect(name) {
     playSystemSound('click');
     const input = document.querySelector('.search-input');
     const box = document.querySelector('.suggestions-box');
-    
+
     if (input) input.value = name;
     if (box) box.style.display = 'none';
-    
+
     searchDestinations(); // لتحديث الشبكة بالوجهة المختارة فقط
     addLog(`نظام البحث: تم اختيار [${name}] بسرعة.`);
 }
@@ -693,14 +693,14 @@ function filterCategory(cat) {
         filtered = destinations.filter(d => d.category === cat);
         categoryName = cat === 'local' ? "الوجهات المحلية" : "الوجهات العالمية";
     }
-    
+
     renderDestinations(filtered);
     addLog(`الفلاتر: تم عرض ${categoryName} (${filtered.length} وجهة).`);
 
     // إغلاق السايدبار تلقائياً في الجوال بعد اختيار التصنيف
     const sidebar = document.querySelector('.sidebar');
     const overlay = document.querySelector('.sidebar-overlay');
-    
+
     if (sidebar && sidebar.classList.contains('active')) {
         sidebar.classList.remove('active');
         if (overlay) overlay.classList.remove('active');
@@ -713,7 +713,7 @@ function filterCategory(cat) {
 function updateVaultUI() {
     // حفظ الرصيد لضمان عدم الضياع عند التحديث
     localStorage.setItem('nour_coin_balance', nourCoinBalance.toFixed(2));
-    
+
     // تحديث كافة عناصر الرصيد في الصفحة (السايدبار، الهيدر، المحفظة)
     const balances = document.querySelectorAll('.vault-balance, #nour-balance, #vault-balance-display');
     balances.forEach(el => {
@@ -765,19 +765,19 @@ function openModal(id) {
 
     currentSelection = dest;
     // تجهيز بيانات الحجز (السعر الأساسي للوجهة)
-    bookingData = { 
-        flight: dest.price, 
-        hotel: 0, 
-        car: 0, 
+    bookingData = {
+        flight: dest.price,
+        hotel: 0,
+        car: 0,
         total: dest.price,
         flightLabel: "الأساسية",
         hotelLabel: "لم يتم الاختيار",
         carLabel: "لم يتم الاختيار"
     };
-    
-    currentStep = 1; 
+
+    currentStep = 1;
     renderStep();
-    
+
     const modal = document.getElementById('booking-modal') || document.querySelector('.modal-overlay');
     if (modal) modal.classList.add('active');
 }
@@ -796,7 +796,7 @@ function renderStep() {
     const actionBtn = document.querySelector('.btn-confirm');
 
     // تحديث شريط التقدم العلوي
-    
+
     steps.forEach((s, idx) => {
         s.classList.toggle('active', idx + 1 <= currentStep);
     });
@@ -809,7 +809,7 @@ function renderStep() {
                 <button class="opt-btn" onclick="selectOption('flight', 550, 'درجة الأعمال')"><span>💼 درجة الأعمال</span> <span>+550 NC</span></button>
                 <button class="opt-btn" onclick="selectOption('flight', 1200, 'الدرجة الأولى')"><span>👑 الدرجة الأولى</span> <span>+1200 NC</span></button>
             </div>`;
-        if(actionBtn) actionBtn.style.display = "none"; 
+        if(actionBtn) actionBtn.style.display = "none";
     } else if (currentStep === 2) {
         title.innerText = `الخطوة 2: الإقامة في ${currentSelection.name}`;
         desc.innerHTML = `
@@ -834,7 +834,7 @@ function renderStep() {
 // 4. تطبيق الاختيارات والانتقال للخطوة التالية
 function selectOption(type, price, label) {
     if(typeof playSystemSound === 'function') playSystemSound('hover');
-    
+
     if (type === 'flight') {
         bookingData.flight += price;
         bookingData.flightLabel = label;
@@ -842,7 +842,7 @@ function selectOption(type, price, label) {
         bookingData[type] = price;
         bookingData[type + 'Label'] = label;
     }
-    
+
     addLog(`Booking: تم اختيار ${label}`);
     currentStep++;
     renderStep();
@@ -853,7 +853,7 @@ function showFinalSummary() {
     const total = bookingData.flight + bookingData.hotel + bookingData.car;
     bookingData.total = total;
     const actionBtn = document.querySelector('.btn-confirm');
-    
+
     document.getElementById('modal-title').innerText = "ملخص رحلتك";
     document.getElementById('modal-desc').innerHTML = `
         <div class="summary-box" style="background: #f8fafc; border-radius: 20px; padding: 20px; text-align: right;">
@@ -865,7 +865,7 @@ function showFinalSummary() {
                 <span>الإجمالي النهائي:</span> <span>${total} NC</span>
             </div>
         </div>`;
-    
+
 if(actionBtn) {
         actionBtn.style.display = "flex";
         actionBtn.style.gap = "12px";
@@ -879,12 +879,12 @@ if(actionBtn) {
 // 6. التأكيد النهائي وخصم الرصيد
 function finalConfirm() {
     const total = bookingData.total;
-    
+
     if (nourCoinBalance >= total) {
         nourCoinBalance -= total;
         if(typeof playSystemSound === 'function') playSystemSound('success');
         closeModal();
-        
+
         // تسجيل بيانات الحجز الجديد
         const newBooking = {
             id: "NB-" + Math.floor(Math.random() * 90000 + 10000),
@@ -892,17 +892,17 @@ function finalConfirm() {
             total: total,
             date: new Date().toLocaleDateString('ar-SA')
         };
-        
+
         bookings.push(newBooking);
         localStorage.setItem('nourbest_bookings', JSON.stringify(bookings));
-        
+
         // تحديث الواجهة
-        updateVaultUI(); 
+        updateVaultUI();
         if(typeof renderBookings === 'function') renderBookings();
 
         const msg = `برافو! تم حجز رحلتك إلى ${currentSelection.name}. رقم الحجز: ${newBooking.id}`;
         addLog(`Success: ${msg}`);
-        
+
         if(typeof showToast === 'function') {
             showToast("تم تأكيد الحجز بنجاح!", "success");
         } else {
@@ -947,14 +947,14 @@ function renderBookings() {
 function updateClock() {
     const clockEl = document.getElementById('universal-clock');
     const now = new Date();
-    
+
     if (clockEl) {
         // عرض الوقت بنمط 12 ساعة مع الثواني
-        clockEl.innerText = now.toLocaleTimeString('ar-SA', { 
-            hour: '2-digit', 
-            minute: '2-digit', 
+        clockEl.innerText = now.toLocaleTimeString('ar-SA', {
+            hour: '2-digit',
+            minute: '2-digit',
             second: '2-digit',
-            hour12: true 
+            hour12: true
         });
     }
 }
@@ -968,7 +968,7 @@ async function updateWeather() {
     const cities = ["الرياض", "لندن", "باريس", "طوكيو", "نيويورك"];
     const randomCity = cities[Math.floor(Math.random() * cities.length)];
     const temp = Math.floor(Math.random() * 35) + 5; // درجة حرارة بين 5 و 40
-    
+
     // تحديث المحتوى البصري
     weatherEl.innerHTML = `
         <i class="fas fa-temperature-high" style="color: var(--primary-blue);"></i>
@@ -1002,7 +1002,7 @@ if (sidebarOverlay) {
 window.onresize = () => {
     // إعادة تهيئة الماتريكس عند تغيير حجم النافذة لضمان عدم حدوث تشوه
     if (typeof initMatrix === "function") initMatrix();
-    
+
     // إغلاق السايدبار تلقائياً إذا كبرت الشاشة فجأة (للديسكتوب)
     if (window.innerWidth > 1100) {
         const sidebar = document.querySelector('.sidebar');
@@ -1012,10 +1012,10 @@ window.onresize = () => {
 /* ==================== محرك استخراج التذكرة الرقمية ==================== */
 function downloadTicket() {
     if (!currentSelection) return;
-    
+
     const ticketID = "NB-" + Math.floor(Math.random() * 90000);
     const total = bookingData.total;
-    
+
     const ticketContent = `
     ==========================================
               NOURBEST TRAVEL OS
@@ -1044,3 +1044,244 @@ function downloadTicket() {
     addLog(`System: تم تصدير التذكرة الرقمية لرحلة [${currentSelection.name}].`);
 }
 /* ==================== نهاية كود NourBest Travel OS ==================== */
+/* ==================== AAA Lite: Neon Strike ==================== */
+const aaaGame = {
+    canvas: null,
+    ctx: null,
+    running: false,
+    paused: false,
+    initialized: false,
+    animationId: null,
+    score: 0,
+    hp: 5,
+    lastTime: 0,
+    spawnTimer: 0,
+    shootTimer: 0,
+    stars: [],
+    bullets: [],
+    enemies: [],
+    keys: {},
+    quality: window.innerWidth < 768 ? 'low' : 'medium',
+    player: { x: 80, y: 180, w: 26, h: 16, speed: 190 }
+};
+
+function getAAASettings() {
+    const low = aaaGame.quality === 'low';
+    return {
+        starCount: low ? 20 : 36,
+        spawnRate: low ? 0.72 : 0.55,
+        maxEnemies: low ? 6 : 10,
+        maxBullets: low ? 8 : 12,
+        playerSpeed: low ? 170 : 190
+    };
+}
+
+function initAAAGame() {
+    if (aaaGame.initialized) return;
+    aaaGame.canvas = document.getElementById('aaa-game-canvas');
+    if (!aaaGame.canvas) return;
+    aaaGame.ctx = aaaGame.canvas.getContext('2d', { alpha: false, desynchronized: true });
+    aaaGame.initialized = true;
+
+    setupAAAStars();
+
+    window.addEventListener('keydown', (e) => {
+        if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'].includes(e.code)) {
+            e.preventDefault();
+        }
+        aaaGame.keys[e.code] = true;
+        if (e.code === 'Space' && aaaGame.running && !aaaGame.paused) fireAAABullet();
+    }, { passive: false });
+
+    window.addEventListener('keyup', (e) => {
+        aaaGame.keys[e.code] = false;
+    });
+
+    drawAAAFrame();
+}
+
+function setupAAAStars() {
+    if (!aaaGame.canvas) return;
+    const { starCount } = getAAASettings();
+    aaaGame.stars = Array.from({ length: starCount }, () => ({
+        x: Math.random() * aaaGame.canvas.width,
+        y: Math.random() * aaaGame.canvas.height,
+        r: Math.random() * 1.5 + 0.3,
+        speed: Math.random() * 26 + 16
+    }));
+}
+
+function startAAAGame() {
+    if (!aaaGame.canvas) initAAAGame();
+    if (!aaaGame.canvas) return;
+    if (aaaGame.running && !aaaGame.paused) return;
+
+    aaaGame.running = true;
+    aaaGame.paused = false;
+    aaaGame.lastTime = performance.now();
+    if (aaaGame.animationId) cancelAnimationFrame(aaaGame.animationId);
+    aaaGame.animationId = requestAnimationFrame(aaaGameLoop);
+    if (typeof addLog === 'function') addLog('AAA Lite: بدأ طور Neon Strike.');
+}
+
+function toggleAAAPause() {
+    if (!aaaGame.running) return;
+    aaaGame.paused = !aaaGame.paused;
+    if (!aaaGame.paused) {
+        aaaGame.lastTime = performance.now();
+        if (aaaGame.animationId) cancelAnimationFrame(aaaGame.animationId);
+        aaaGame.animationId = requestAnimationFrame(aaaGameLoop);
+    }
+}
+
+function resetAAAGame() {
+    aaaGame.score = 0;
+    aaaGame.hp = 5;
+    aaaGame.bullets = [];
+    aaaGame.enemies = [];
+    aaaGame.player.x = 80;
+    aaaGame.player.y = aaaGame.canvas ? aaaGame.canvas.height / 2 : 180;
+    aaaGame.player.speed = getAAASettings().playerSpeed;
+    aaaGame.spawnTimer = 0;
+    aaaGame.shootTimer = 0;
+    aaaGame.running = false;
+    aaaGame.paused = false;
+    if (aaaGame.animationId) cancelAnimationFrame(aaaGame.animationId);
+    aaaGame.animationId = null;
+    drawAAAFrame();
+}
+
+function fireAAABullet() {
+    const { maxBullets } = getAAASettings();
+    if (aaaGame.shootTimer > 0 || aaaGame.bullets.length >= maxBullets) return;
+    aaaGame.bullets.push({
+        x: aaaGame.player.x + aaaGame.player.w,
+        y: aaaGame.player.y + aaaGame.player.h / 2,
+        v: 390
+    });
+    aaaGame.shootTimer = 0.18;
+}
+
+function aaaGameLoop(t) {
+    if (!aaaGame.running || aaaGame.paused) return;
+    const dt = Math.min((t - aaaGame.lastTime) / 1000, 0.033);
+    aaaGame.lastTime = t;
+    updateAAAGame(dt);
+    drawAAAFrame();
+    aaaGame.animationId = requestAnimationFrame(aaaGameLoop);
+}
+
+function updateAAAGame(dt) {
+    const p = aaaGame.player;
+    const settings = getAAASettings();
+    p.speed = settings.playerSpeed;
+
+    if (aaaGame.keys['ArrowUp']) p.y -= p.speed * dt;
+    if (aaaGame.keys['ArrowDown']) p.y += p.speed * dt;
+    if (aaaGame.keys['ArrowLeft']) p.x -= p.speed * dt;
+    if (aaaGame.keys['ArrowRight']) p.x += p.speed * dt;
+
+    const cw = aaaGame.canvas.width;
+    const ch = aaaGame.canvas.height;
+    p.x = Math.max(10, Math.min(cw - p.w - 10, p.x));
+    p.y = Math.max(10, Math.min(ch - p.h - 10, p.y));
+
+    aaaGame.shootTimer = Math.max(0, aaaGame.shootTimer - dt);
+    aaaGame.spawnTimer -= dt;
+    if (aaaGame.spawnTimer <= 0 && aaaGame.enemies.length < settings.maxEnemies) {
+        aaaGame.enemies.push({
+            x: cw + 20,
+            y: Math.random() * (ch - 24),
+            w: 22,
+            h: 16,
+            v: 80 + Math.random() * 70
+        });
+        aaaGame.spawnTimer = settings.spawnRate;
+    }
+
+    aaaGame.stars.forEach((s) => {
+        s.x -= s.speed * dt;
+        if (s.x < 0) s.x = cw;
+    });
+
+    aaaGame.bullets = aaaGame.bullets.filter((b) => (b.x += b.v * dt) < cw + 20);
+    aaaGame.enemies.forEach((e) => { e.x -= e.v * dt; });
+
+    aaaGame.enemies = aaaGame.enemies.filter((e) => {
+        if (e.x + e.w < 0) {
+            aaaGame.hp -= 1;
+            return false;
+        }
+        return true;
+    });
+
+    aaaGame.enemies = aaaGame.enemies.filter((e) => {
+        const hit = aaaGame.bullets.findIndex((b) => b.x > e.x && b.x < e.x + e.w && b.y > e.y && b.y < e.y + e.h);
+        if (hit > -1) {
+            aaaGame.bullets.splice(hit, 1);
+            aaaGame.score += 10;
+            return false;
+        }
+        return true;
+    });
+
+    const playerHit = aaaGame.enemies.some((e) => e.x < p.x + p.w && e.x + e.w > p.x && e.y < p.y + p.h && e.y + e.h > p.y);
+    if (playerHit) {
+        aaaGame.hp -= 1;
+        aaaGame.enemies = aaaGame.enemies.filter((e) => !(e.x < p.x + p.w && e.x + e.w > p.x && e.y < p.y + p.h && e.y + e.h > p.y));
+    }
+
+    if (aaaGame.hp <= 0) {
+        aaaGame.running = false;
+        if (aaaGame.animationId) cancelAnimationFrame(aaaGame.animationId);
+        aaaGame.animationId = null;
+        if (typeof showToast === 'function') showToast(`انتهت الجولة! نقاطك: ${aaaGame.score}`, 'info');
+    }
+}
+
+function drawAAAFrame() {
+    if (!aaaGame.ctx || !aaaGame.canvas) return;
+    const ctx = aaaGame.ctx;
+    const cw = aaaGame.canvas.width;
+    const ch = aaaGame.canvas.height;
+
+    ctx.fillStyle = '#020617';
+    ctx.fillRect(0, 0, cw, ch);
+
+    ctx.fillStyle = '#1e293b';
+    aaaGame.stars.forEach((s) => {
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fill();
+    });
+
+    ctx.fillStyle = '#38bdf8';
+    const p = aaaGame.player;
+    ctx.fillRect(p.x, p.y, p.w, p.h);
+    ctx.fillStyle = '#7dd3fc';
+    ctx.fillRect(p.x + p.w - 4, p.y + 4, 8, 8);
+
+    ctx.fillStyle = '#f59e0b';
+    aaaGame.bullets.forEach((b) => ctx.fillRect(b.x, b.y, 8, 2));
+
+    ctx.fillStyle = '#ef4444';
+    aaaGame.enemies.forEach((e) => ctx.fillRect(e.x, e.y, e.w, e.h));
+
+    ctx.fillStyle = '#e2e8f0';
+    ctx.font = 'bold 14px Orbitron, sans-serif';
+    ctx.fillText(`SCORE: ${aaaGame.score}`, 16, 24);
+    ctx.fillText(`HP: ${aaaGame.hp}`, 16, 44);
+
+    if (!aaaGame.running) {
+        ctx.fillStyle = '#93c5fd';
+        ctx.font = 'bold 20px Tajawal, sans-serif';
+        ctx.fillText('اضغط "بدء الجولة" للعب', cw / 2 - 110, ch / 2);
+    }
+}
+
+window.addEventListener('resize', () => {
+    aaaGame.quality = window.innerWidth < 768 ? 'low' : 'medium';
+    setupAAAStars();
+});
+
+document.addEventListener('DOMContentLoaded', initAAAGame);
