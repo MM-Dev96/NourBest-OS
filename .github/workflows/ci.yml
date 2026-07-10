@@ -1,0 +1,24 @@
+name: Validate NourBest OS
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm test
+      - run: bash -n linux/build-image.sh linux/nourbest-session.sh
+      - name: Verify offline assets
+        run: |
+          test -s index.html
+          test -s manifest.webmanifest
+          test -s icons/nourbest-192.png
+          test -s icons/nourbest-512.png

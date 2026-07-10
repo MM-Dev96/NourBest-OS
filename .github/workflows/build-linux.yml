@@ -1,0 +1,25 @@
+name: Build Linux image
+on:
+  workflow_dispatch:
+    inputs:
+      architecture:
+        description: Target architecture
+        required: true
+        default: amd64
+        type: choice
+        options: [amd64, arm64]
+permissions:
+  contents: read
+jobs:
+  image:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update && sudo apt-get install -y live-build debootstrap xorriso
+      - run: sudo env NOURBEST_ARCH='${{ inputs.architecture }}' ./linux/build-image.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nourbest-os-${{ inputs.architecture }}
+          path: .build/linux-live/live-image-*.hybrid.iso
+          if-no-files-found: error

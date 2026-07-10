@@ -14,9 +14,11 @@ This directory provides the native boot path. The build uses Debian Live rather 
 sudo apt update
 sudo apt install live-build debootstrap xorriso
 sudo ./linux/build-image.sh
+# ARM64 build:
+sudo env NOURBEST_ARCH=arm64 ./linux/build-image.sh
 ```
 
-The resulting `live-image-amd64.hybrid.iso` boots in BIOS and UEFI environments. Test it in QEMU before real hardware:
+The resulting hybrid image is placed under `.build/linux-live`. The local session now serves Nour Shell over loopback HTTP so its service worker and offline update flow work correctly. Test the image in QEMU before real hardware:
 
 ```bash
 qemu-system-x86_64 -m 4096 -enable-kvm -cdrom live-image-amd64.hybrid.iso

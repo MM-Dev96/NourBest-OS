@@ -1,4 +1,4 @@
-# NourBest OS
+# NourBest OS 2.0
 
 NourBest OS is an Arabic-first, offline-capable universal workspace. It combines a responsive desktop shell with a Progressive Web App delivery model, so the same experience can be installed on iOS, Android, HarmonyOS, Windows, Linux, and modern browsers.
 
@@ -6,11 +6,12 @@ NourBest OS is an Arabic-first, offline-capable universal workspace. It combines
 
 - Adaptive desktop/mobile shell with window management
 - App launcher, command search, control center, lock screen, calendar, and notifications
-- Local Files UI, Notes, Tasks, Calculator, Terminal, Gallery, Settings, and a safe web launcher
+- Functional local files with create/edit/import/export/download, Notes, Tasks, Calculator, Terminal, Gallery, Settings, and a safe web launcher
+- Resizable and snap-capable windows, task switcher, session layout restoration, and universal content search
 - Local-first persistence for notes, tasks, theme, and accessibility preferences
 - Offline cache through a service worker
 - Installable PWA manifest and platform icons
-- Debian Live build foundation for an x86-64 bootable ISO
+- Debian Live build foundation for x86-64 and ARM64 images with an automated GitHub workflow
 
 ## Platform model
 
