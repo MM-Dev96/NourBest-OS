@@ -1,143 +1,134 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>عباية نور | متجر عبايات سعودي فاخر</title>
-  <meta name="description" content="متجر عباية نور لبيع العبايات اليومية والفاخرة مع مقاسات متنوعة، شحن سريع، ودفع آمن داخل السعودية." />
-  <meta name="theme-color" content="#7b2e42" />
-  <link rel="icon" type="image/png" href="favicon.png" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+  <meta name="theme-color" content="#07111f">
+  <meta name="description" content="NourBest OS — مساحة عمل عربية هجينة تعمل على الجوال والكمبيوتر ودون إنترنت.">
+  <title>NourBest OS</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/nourbest.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/nourbest-192.png">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header class="topbar">
-    <p>شحن مجاني للطلبات فوق 299 ر.س داخل السعودية</p>
-    <button id="open-cart" class="cart-btn" aria-label="فتح سلة المشتريات">السلة (<span id="cart-count">0</span>)</button>
-  </header>
+  <noscript>يحتاج NourBest OS إلى JavaScript للعمل.</noscript>
 
-  <nav class="navbar" aria-label="التنقل الرئيسي">
-    <h1>عباية نور</h1>
-    <ul>
-      <li><a href="#products">المنتجات</a></li>
-      <li><a href="#about">من نحن</a></li>
-      <li><a href="#faq">الأسئلة الشائعة</a></li>
-      <li><a href="#contact">تواصل معنا</a></li>
-    </ul>
-  </nav>
+  <section id="boot" class="boot" aria-live="polite">
+    <div class="brand-mark" aria-hidden="true">ن</div>
+    <h1>NourBest OS</h1>
+    <p id="boot-status">تهيئة النواة الهجينة…</p>
+    <div class="boot-track"><span></span></div>
+  </section>
 
-  <main>
-    <section class="hero" aria-label="واجهة المتجر">
-      <div>
-        <p class="badge">تشكيلة 2026</p>
-        <h2>أناقة عصرية بلمسة محتشمة</h2>
-        <p>اختاري من تشكيلة عبايات يومية، عملية، ومناسبة للسهرات بتفاصيل فاخرة وجودة عالية.</p>
-        <div class="hero-actions">
-          <a href="#products" class="primary-btn">تسوقي الآن</a>
-          <a href="https://wa.me/966500000000" target="_blank" rel="noopener" class="secondary-btn">اطلبي عبر واتساب</a>
-        </div>
+  <main id="system" class="system" hidden>
+    <div class="wallpaper" aria-hidden="true"></div>
+
+    <header class="topbar">
+      <button class="system-button" data-action="launcher" aria-label="فتح التطبيقات">
+        <span class="brand-mini">ن</span><b>NourBest</b>
+      </button>
+      <div class="topbar-center">
+        <span id="active-app-label">سطح المكتب</span>
       </div>
-      <div class="hero-card">
-        <h3>لماذا عباية نور؟</h3>
-        <ul>
-          <li>✔ خامات عملية ومريحة لجميع المواسم</li>
-          <li>✔ تفصيل دقيق ومقاسات متنوعة</li>
-          <li>✔ استبدال واسترجاع خلال 7 أيام</li>
-        </ul>
+      <div class="topbar-actions">
+        <button data-action="search" aria-label="البحث">⌕</button>
+        <button data-action="quick" aria-label="الإعدادات السريعة">◉</button>
+        <button id="clock" data-action="calendar" aria-label="التاريخ والوقت"></button>
+      </div>
+    </header>
+
+    <section class="desktop" id="desktop" aria-label="سطح المكتب">
+      <div class="desktop-copy">
+        <p class="eyebrow">NOURBEST UNIFIED EXPERIENCE</p>
+        <h2 id="greeting">مرحبًا بك</h2>
+        <p>نظام واحد، تجربة تتكيّف مع كل شاشة.</p>
+      </div>
+      <div class="desktop-widgets">
+        <article class="widget hero-widget">
+          <span>اليوم</span>
+          <strong id="widget-time">--:--</strong>
+          <small id="widget-date">—</small>
+        </article>
+        <article class="widget status-widget">
+          <span>حالة النظام</span>
+          <strong><i class="online-dot"></i> جاهز</strong>
+          <small id="network-state">يعمل محليًا</small>
+        </article>
+      </div>
+      <div id="desktop-icons" class="desktop-icons"></div>
+    </section>
+
+    <section id="window-layer" class="window-layer" aria-live="polite"></section>
+
+    <nav id="dock" class="dock" aria-label="التطبيقات المثبتة"></nav>
+
+    <section id="launcher" class="panel launcher" hidden>
+      <div class="panel-head">
+        <div><small>NourBest OS</small><h2>كل التطبيقات</h2></div>
+        <button data-close="launcher" aria-label="إغلاق">×</button>
+      </div>
+      <label class="search-box">
+        <span>⌕</span>
+        <input id="launcher-search" type="search" placeholder="ابحث عن تطبيق…" autocomplete="off">
+      </label>
+      <div id="app-grid" class="app-grid"></div>
+      <footer class="launcher-footer">
+        <button data-action="lock">◈ قفل</button>
+        <button data-action="power">⏻ إعادة تشغيل</button>
+      </footer>
+    </section>
+
+    <section id="quick" class="panel quick-panel" hidden>
+      <div class="panel-head"><h2>مركز التحكم</h2><button data-close="quick">×</button></div>
+      <div class="quick-grid">
+        <button class="toggle active" data-toggle="wifi"><b>◉</b><span>Wi‑Fi</span><small>متصل</small></button>
+        <button class="toggle active" data-toggle="sound"><b>♫</b><span>الصوت</span><small>مفعّل</small></button>
+        <button class="toggle" data-toggle="focus"><b>◐</b><span>التركيز</span><small>متوقف</small></button>
+        <button class="toggle" data-toggle="night"><b>☾</b><span>ليلي</span><small>تلقائي</small></button>
+      </div>
+      <label class="range-row"><span>السطوع</span><input id="brightness" type="range" min="35" max="100" value="100"></label>
+      <label class="range-row"><span>الصوت</span><input type="range" min="0" max="100" value="72"></label>
+      <p class="device-line"><span>هذا الجهاز</span><strong id="device-label">جهاز متوافق</strong></p>
+    </section>
+
+    <section id="search-panel" class="panel search-panel" hidden>
+      <label class="search-box global-search"><span>⌕</span><input id="global-search" type="search" placeholder="اكتب أمرًا أو اسم تطبيق…"></label>
+      <div id="search-results" class="search-results"></div>
+    </section>
+
+    <section id="calendar" class="panel calendar-panel" hidden>
+      <div class="calendar-time" id="calendar-time">--:--</div>
+      <p id="calendar-full-date">—</p>
+      <div class="month-card"><strong id="month-title">—</strong><div id="month-days" class="month-days"></div></div>
+    </section>
+
+    <section id="lock-screen" class="lock-screen" hidden>
+      <div class="lock-content">
+        <div class="brand-mark small">ن</div>
+        <time id="lock-time">--:--</time>
+        <p id="lock-date">—</p>
+        <button data-action="unlock">فتح النظام</button>
       </div>
     </section>
 
-    <section class="features">
-      <article><h3>دفع آمن</h3><p>مدى، فيزا، ماستر كارد، Apple Pay.</p></article>
-      <article><h3>توصيل سريع</h3><p>من 2 إلى 4 أيام عمل داخل المملكة.</p></article>
-      <article><h3>خدمة عملاء</h3><p>دعم يومي من 10 صباحًا إلى 10 مساءً.</p></article>
-    </section>
-
-    <section class="products-section" id="products">
-      <div class="section-title-row">
-        <h2>منتجاتنا</h2>
-        <div class="filters">
-          <label class="sr-only" for="search">بحث</label>
-          <input type="search" id="search" placeholder="ابحثي عن عباية..." />
-          <label class="sr-only" for="category-filter">الفئة</label>
-          <select id="category-filter">
-            <option value="all">كل الفئات</option>
-            <option value="daily">عبايات يومية</option>
-            <option value="formal">عبايات مناسبات</option>
-            <option value="colored">عبايات ملونة</option>
-          </select>
-          <label class="sr-only" for="price-filter">السعر</label>
-          <select id="price-filter">
-            <option value="all">كل الأسعار</option>
-            <option value="low">أقل من 250 ر.س</option>
-            <option value="mid">250 - 450 ر.س</option>
-            <option value="high">أعلى من 450 ر.س</option>
-          </select>
-          <button id="reset-filters" class="reset-btn" type="button">إعادة ضبط</button>
-        </div>
-      </div>
-      <p class="stock-note">تم تحديث المخزون اليوم — الطلبات تؤكد خلال نفس اليوم.</p>
-      <div id="products-grid" class="products-grid"></div>
-    </section>
-
-    <section id="about" class="about">
-      <h2>من نحن</h2>
-      <p>
-        عباية نور متجر إلكتروني سعودي متخصص في تصميم وتوريد العبايات بجودة عالية وتفاصيل أنيقة.
-        نهدف لتقديم تجربة شراء سهلة، منتجات موثوقة، وخدمة ما بعد البيع تهتم براحتك.
-      </p>
-    </section>
-
-    <section class="testimonials">
-      <h2>آراء عميلاتنا</h2>
-      <div class="testimonial-grid">
-        <blockquote>"الخامة ممتازة والتفصيل أنيق جدًا، وصلتني خلال يومين." <span>— ريم، الرياض</span></blockquote>
-        <blockquote>"تعامل راقي وسرعة في الرد، أكيد بطلب مرة ثانية." <span>— أمل، جدة</span></blockquote>
-        <blockquote>"المقاسات دقيقة والتغليف مرتب، شكراً لكم." <span>— جود، الدمام</span></blockquote>
-      </div>
-    </section>
-
-    <section id="faq" class="faq">
-      <h2>الأسئلة الشائعة</h2>
-      <details><summary>هل يوجد استبدال أو استرجاع؟</summary><p>نعم، خلال 7 أيام بشرط أن تكون العباية بحالتها الأصلية.</p></details>
-      <details><summary>هل أقدر أطلب تفصيل خاص؟</summary><p>نعم، متاح تفصيل لبعض الموديلات عبر واتساب المتجر.</p></details>
-      <details><summary>ما هي مدة التوصيل؟</summary><p>داخل المدن الرئيسية 2-4 أيام عمل، وقد تزيد للمناطق البعيدة.</p></details>
-    </section>
-
-    <section id="contact" class="contact">
-      <h2>تواصلي معنا</h2>
-      <form id="contact-form">
-        <input id="contact-name" type="text" placeholder="الاسم الكامل" minlength="3" required />
-        <input id="contact-email" type="email" placeholder="البريد الإلكتروني" required />
-        <textarea id="contact-message" placeholder="رسالتك" rows="4" minlength="10" required></textarea>
-        <button type="submit">إرسال</button>
-      </form>
-    </section>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
   </main>
 
-  <div id="cart-overlay" class="cart-overlay" hidden></div>
-  <aside id="cart-drawer" class="cart-drawer" aria-hidden="true">
-    <div class="cart-header">
-      <h3>سلة المشتريات</h3>
-      <button id="close-cart" aria-label="إغلاق السلة">✕</button>
-    </div>
-    <div id="cart-items" class="cart-items"></div>
-    <div class="cart-footer">
-      <p>الإجمالي: <strong id="cart-total">0 ر.س</strong></p>
-      <button id="checkout-btn">إتمام الطلب</button>
-      <a id="whatsapp-checkout" class="wa-checkout" target="_blank" rel="noopener">إرسال الطلب عبر واتساب</a>
-    </div>
-  </aside>
+  <template id="window-template">
+    <article class="app-window" role="dialog" aria-modal="false">
+      <header class="window-bar">
+        <div class="window-title"><span class="window-icon"></span><strong></strong></div>
+        <div class="window-controls">
+          <button data-window-action="minimize" aria-label="تصغير">−</button>
+          <button data-window-action="maximize" aria-label="تكبير">□</button>
+          <button data-window-action="close" class="close" aria-label="إغلاق">×</button>
+        </div>
+      </header>
+      <div class="window-body"></div>
+    </article>
+  </template>
 
-  <div id="toast" class="toast" role="status" aria-live="polite"></div>
-
-  <footer>
-    <p>© 2026 عباية نور - جميع الحقوق محفوظة</p>
-    <p>واتساب الطلبات: <a href="https://wa.me/966500000000" target="_blank" rel="noopener">+966 50 000 0000</a></p>
-  </footer>
-
-  <script src="app.js"></script>
+  <script src="app.js" defer></script>
 </body>
 </html>
