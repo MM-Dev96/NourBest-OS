@@ -36,6 +36,7 @@
         <span id="active-app-label">سطح المكتب</span>
       </div>
       <div class="topbar-actions">
+        <button data-action="share" aria-label="مشاركة النظام">↗</button>
         <button data-action="taskswitcher" aria-label="النوافذ المفتوحة">▣</button>
         <button data-action="search" aria-label="البحث">⌕</button>
         <button data-action="quick" aria-label="الإعدادات السريعة">◉</button>
@@ -124,6 +125,17 @@
         <time id="lock-time">--:--</time>
         <p id="lock-date">—</p>
         <button data-action="unlock">فتح النظام</button>
+      </div>
+    </section>
+
+    <section id="onboarding" class="onboarding" hidden>
+      <div class="onboarding-card">
+        <div class="brand-mark">ن</div>
+        <p class="eyebrow">NOURBEST OS 2.0</p>
+        <h2>مساحتك، بطريقتك</h2>
+        <p>عرّف النظام باسمك، ثم ثبّته من زر المشاركة ليعمل كتطبيق مستقل.</p>
+        <label>اسمك<input id="profile-name" autocomplete="name" placeholder="اكتب اسمك"></label>
+        <button class="primary" data-action="finish-onboarding">ابدأ الآن</button>
       </div>
     </section>
 
