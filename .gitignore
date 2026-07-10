@@ -1,0 +1,10 @@
+node_modules/
+desktop/node_modules/
+.build/
+playwright-report/
+test-results/
+desktop/dist/
+*.log
+*.iso
+__pycache__/
+*.pyc

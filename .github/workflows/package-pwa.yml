@@ -1,0 +1,17 @@
+name: Package PWA
+on:
+  workflow_dispatch:
+  release:
+    types: [published]
+permissions:
+  contents: read
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: zip -r nourbest-os-pwa.zip index.html styles.css app.js storage-db.js plugin-api.js sw.js manifest.webmanifest release.json icons plugins vendor screenshots
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nourbest-os-pwa
+          path: nourbest-os-pwa.zip

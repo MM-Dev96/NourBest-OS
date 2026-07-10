@@ -1,4 +1,4 @@
-# NourBest OS 2.0
+# NourBest OS 3.0
 
 NourBest OS is an Arabic-first, offline-capable universal workspace. It combines a responsive desktop shell with a Progressive Web App delivery model, so the same experience can be installed on iOS, Android, HarmonyOS, Windows, Linux, and modern browsers.
 
@@ -6,21 +6,24 @@ NourBest OS is an Arabic-first, offline-capable universal workspace. It combines
 
 - Adaptive desktop/mobile shell with window management
 - App launcher, command search, control center, lock screen, calendar, and notifications
-- Functional local files with create/edit/import/export/download, Notes, Tasks, Calculator, Terminal, Gallery, Settings, and a safe web launcher
-- Resizable and snap-capable windows, task switcher, session layout restoration, and universal content search
-- Local-first persistence for notes, tasks, theme, and accessibility preferences
+- Hierarchical local files with folders, move/copy, favorites, trash, import/export and content search
+- Notes with Markdown preview, tags, folders, templates and version history; recurring tasks with subtasks, reminders and calendar
+- Scientific calculator, timers, unit converter, audio player, recorder and offline QR generator
+- Three virtual desktops, resizable/snap-capable windows, task switcher, previews and session restoration
+- Local-first IndexedDB persistence, snapshots, full JSON backup/restore and per-app storage diagnostics
 - Offline cache through a service worker
 - Installable PWA manifest and platform icons
-- Debian Live build foundation for x86-64 and ARM64 images with an automated GitHub workflow
+- Desktop packages for Windows, macOS and Linux through Electron build workflows
+- Installable Debian Live image source for x86-64/ARM64 with a native file/application bridge, updater, installer, persistent USB helper, Wine and Waydroid setup helpers
 
 ## Platform model
 
 | Platform | Delivery | Capability |
 |---|---|---|
 | iPhone / iPad | Install from Safari as a PWA | NourBest interface and local apps; does not replace the protected iOS kernel |
-| Android / HarmonyOS | Installable PWA, future native wrapper | Full shell plus browser-permitted device APIs |
-| Windows / macOS | Installable PWA, future desktop wrapper | Desktop shell and local-first apps |
-| Linux x86-64 | PWA or Debian Live image | Native boot path and full Linux userspace |
+| Android / HarmonyOS | Installable PWA | Full shell plus browser-permitted device APIs |
+| Windows / macOS | PWA or generated Electron package | Desktop shell and local-first apps |
+| Linux x86-64 / ARM64 | PWA, desktop package, or Debian Live image | Native boot path, Linux userspace and allowlisted native bridge |
 
 No project can legally merge proprietary iOS, Windows, Android, and HarmonyOS source code. NourBest OS instead uses a clean universal shell and open compatibility layers.
 
@@ -38,7 +41,20 @@ Then open `http://localhost:8080`.
 
 ```bash
 npm test
+npm run test:e2e
 ```
+
+The automated suite covers desktop, iPhone-sized and iPad-sized touch layouts, persistence, QR generation, overflow and serious accessibility violations.
+
+## Build desktop packages
+
+```bash
+cd desktop
+npm ci
+npm run dist
+```
+
+The GitHub workflow produces AppImage, Windows NSIS and macOS DMG artifacts on their native runners.
 
 ## Build the Linux image
 

@@ -1,0 +1,28 @@
+name: Build desktop packages
+on:
+  workflow_dispatch:
+  release:
+    types: [published]
+permissions:
+  contents: read
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: desktop/package-lock.json
+      - run: npm install
+        working-directory: desktop
+      - run: npm run dist -- --publish never
+        working-directory: desktop
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nourbest-${{ matrix.os }}
+          path: desktop/dist/*

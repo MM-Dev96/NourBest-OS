@@ -2,7 +2,9 @@
 set -euo pipefail
 
 PORT=8765
-python3 -m http.server "$PORT" --directory /opt/nourbest-os >/tmp/nourbest-http.log 2>&1 &
+xfsettingsd >/tmp/nourbest-xfsettings.log 2>&1 &
+xfwm4 --replace >/tmp/nourbest-xfwm.log 2>&1 &
+python3 /usr/local/lib/nourbest/native_bridge.py >/tmp/nourbest-http.log 2>&1 &
 SERVER_PID=$!
 trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
 

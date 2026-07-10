@@ -1,6 +1,6 @@
 "use strict";
 (function(){
-  const DB_NAME="nourbest-os",DB_VERSION=2,STORE="state";
+  const DB_NAME="nourbest-os",DB_VERSION=3,STORE="state";
   let dbPromise;
   function open(){if(!("indexedDB" in window))return Promise.resolve(null);if(!dbPromise)dbPromise=new Promise((resolve,reject)=>{const request=indexedDB.open(DB_NAME,DB_VERSION);request.onupgradeneeded=()=>{const db=request.result;if(!db.objectStoreNames.contains(STORE))db.createObjectStore(STORE);};request.onsuccess=()=>resolve(request.result);request.onerror=()=>reject(request.error);});return dbPromise;}
   async function get(key){const db=await open();if(!db)return undefined;return new Promise((resolve,reject)=>{const request=db.transaction(STORE,"readonly").objectStore(STORE).get(key);request.onsuccess=()=>resolve(request.result);request.onerror=()=>reject(request.error);});}
