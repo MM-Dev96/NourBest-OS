@@ -2,142 +2,217 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>عباية نور | متجر عبايات سعودي فاخر</title>
-  <meta name="description" content="متجر عباية نور لبيع العبايات اليومية والفاخرة مع مقاسات متنوعة، شحن سريع، ودفع آمن داخل السعودية." />
-  <meta name="theme-color" content="#7b2e42" />
-  <link rel="icon" type="image/png" href="favicon.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>مِرشاد | دليلك السعودي الذكي للشراء بثقة</title>
+  <meta name="description" content="مِرشاد — دليل سعودي يقارن أسعار قطع الغيار الحقيقية بين المتاجر الداخلية والخارجية، ويكشف مصداقية كل متجر بشفافية كاملة." />
+  <meta name="theme-color" content="#0b3d2e" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="manifest" href="manifest.json" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header class="topbar">
-    <p>شحن مجاني للطلبات فوق 299 ر.س داخل السعودية</p>
-    <button id="open-cart" class="cart-btn" aria-label="فتح سلة المشتريات">السلة (<span id="cart-count">0</span>)</button>
+
+  <!-- شريط الشفافية -->
+  <div class="transparency-bar" id="transparency-bar">
+    <span>🔍 كل الأسعار مرصودة يدويًا من صفحات المنتجات الرسمية بتاريخ <strong id="data-date"></strong> — الأسعار تتغير، تحقق من صفحة المنتج قبل الشراء</span>
+  </div>
+
+  <header class="header">
+    <div class="header-inner">
+      <a class="brand" href="#" id="brand-home">
+        <span class="brand-mark">مِرشاد</span>
+        <span class="brand-tag">دليل يفكّر معك</span>
+      </a>
+      <nav class="main-nav" aria-label="التنقل الرئيسي">
+        <button class="nav-btn active" data-view="parts">قطع الغيار</button>
+        <button class="nav-btn" data-view="stores">دليل المتاجر</button>
+        <button class="nav-btn" data-view="advisor">مستشار الصيانة</button>
+        <button class="nav-btn" data-view="tools">أدوات ذكية</button>
+        <button class="nav-btn" data-view="method">منهجيتنا</button>
+      </nav>
+      <div class="header-actions">
+        <button id="fav-toggle" class="icon-btn" aria-label="المفضلة" title="المفضلة">♡<span id="fav-count" class="badge-dot" hidden>0</span></button>
+        <button id="theme-toggle" class="icon-btn" aria-label="تبديل الوضع الليلي" title="الوضع الليلي">◐</button>
+      </div>
+    </div>
   </header>
 
-  <nav class="navbar" aria-label="التنقل الرئيسي">
-    <h1>عباية نور</h1>
-    <ul>
-      <li><a href="#products">المنتجات</a></li>
-      <li><a href="#about">من نحن</a></li>
-      <li><a href="#faq">الأسئلة الشائعة</a></li>
-      <li><a href="#contact">تواصل معنا</a></li>
-    </ul>
-  </nav>
+  <main id="app">
 
-  <main>
-    <section class="hero" aria-label="واجهة المتجر">
-      <div>
-        <p class="badge">تشكيلة 2026</p>
-        <h2>أناقة عصرية بلمسة محتشمة</h2>
-        <p>اختاري من تشكيلة عبايات يومية، عملية، ومناسبة للسهرات بتفاصيل فاخرة وجودة عالية.</p>
-        <div class="hero-actions">
-          <a href="#products" class="primary-btn">تسوقي الآن</a>
-          <a href="https://wa.me/966500000000" target="_blank" rel="noopener" class="secondary-btn">اطلبي عبر واتساب</a>
+    <!-- ===== واجهة البطل ===== -->
+    <section class="hero" id="hero">
+      <div class="hero-content">
+        <p class="hero-kicker">دليل سعودي بتوجّه جديد 🇸🇦</p>
+        <h1>لا تشترِ قطعة غيار<br />قبل ما تسأل <em>مِرشاد</em></h1>
+        <p class="hero-sub">نقارن الأسعار الحقيقية بين المتاجر الداخلية والخارجية، نكشف لك مصداقية كل متجر، ونحكم على كل سعر: <b>صفقة، عادل، أو مبالغ فيه</b> — كل رقم عندنا له مصدر وتاريخ رصد.</p>
+        <div class="search-shell">
+          <input type="search" id="global-search" placeholder='جرّب: "فلتر زيت كامري" أو "فحمات" أو "بطارية"...' autocomplete="off" aria-label="بحث في الدليل" />
+          <button id="voice-search" class="voice-btn" aria-label="بحث صوتي" title="بحث صوتي">🎙️</button>
+        </div>
+        <p class="search-hint" id="search-hint" hidden></p>
+        <div class="hero-stats" id="hero-stats"></div>
+      </div>
+    </section>
+
+    <!-- ===== عرض: قطع الغيار ===== -->
+    <section class="view" id="view-parts">
+      <div class="toolbar">
+        <div class="chips" id="type-chips" role="group" aria-label="نوع القطعة"></div>
+        <div class="toolbar-row">
+          <select id="brand-filter" aria-label="ماركة السيارة"></select>
+          <select id="sort-select" aria-label="الترتيب">
+            <option value="smart">ترتيب ذكي (الأفضل قيمة)</option>
+            <option value="cheap">الأرخص أولًا</option>
+            <option value="trust">الأعلى ثقة أولًا</option>
+          </select>
+          <button id="my-car-btn" class="ghost-btn">🚗 سيارتي</button>
         </div>
       </div>
-      <div class="hero-card">
-        <h3>لماذا عباية نور؟</h3>
-        <ul>
-          <li>✔ خامات عملية ومريحة لجميع المواسم</li>
-          <li>✔ تفصيل دقيق ومقاسات متنوعة</li>
-          <li>✔ استبدال واسترجاع خلال 7 أيام</li>
-        </ul>
+      <div class="my-car-banner" id="my-car-banner" hidden></div>
+      <div class="products" id="products-list" aria-live="polite"></div>
+      <div class="compare-tray" id="compare-tray" hidden>
+        <span id="compare-label"></span>
+        <button id="compare-open" class="primary-btn small">قارن الآن</button>
+        <button id="compare-clear" class="ghost-btn small">مسح</button>
       </div>
     </section>
 
-    <section class="features">
-      <article><h3>دفع آمن</h3><p>مدى، فيزا، ماستر كارد، Apple Pay.</p></article>
-      <article><h3>توصيل سريع</h3><p>من 2 إلى 4 أيام عمل داخل المملكة.</p></article>
-      <article><h3>خدمة عملاء</h3><p>دعم يومي من 10 صباحًا إلى 10 مساءً.</p></article>
-    </section>
-
-    <section class="products-section" id="products">
-      <div class="section-title-row">
-        <h2>منتجاتنا</h2>
-        <div class="filters">
-          <label class="sr-only" for="search">بحث</label>
-          <input type="search" id="search" placeholder="ابحثي عن عباية..." />
-          <label class="sr-only" for="category-filter">الفئة</label>
-          <select id="category-filter">
-            <option value="all">كل الفئات</option>
-            <option value="daily">عبايات يومية</option>
-            <option value="formal">عبايات مناسبات</option>
-            <option value="colored">عبايات ملونة</option>
-          </select>
-          <label class="sr-only" for="price-filter">السعر</label>
-          <select id="price-filter">
-            <option value="all">كل الأسعار</option>
-            <option value="low">أقل من 250 ر.س</option>
-            <option value="mid">250 - 450 ر.س</option>
-            <option value="high">أعلى من 450 ر.س</option>
-          </select>
-          <button id="reset-filters" class="reset-btn" type="button">إعادة ضبط</button>
+    <!-- ===== عرض: دليل المتاجر ===== -->
+    <section class="view" id="view-stores" hidden>
+      <div class="section-head">
+        <h2>دليل المتاجر</h2>
+        <p>درجة الثقة تُحسب بمعادلة معلنة من عوامل تحققنا منها فعليًا — والعامل غير المؤكد يُعرض «غير مؤكد» ولا نخترع له قيمة.</p>
+        <div class="chips" id="store-scope-chips" role="group" aria-label="نطاق المتجر">
+          <button class="chip active" data-scope="all">الكل</button>
+          <button class="chip" data-scope="internal">🇸🇦 داخلية</button>
+          <button class="chip" data-scope="external">🌍 خارجية</button>
         </div>
       </div>
-      <p class="stock-note">تم تحديث المخزون اليوم — الطلبات تؤكد خلال نفس اليوم.</p>
-      <div id="products-grid" class="products-grid"></div>
+      <div class="stores" id="stores-list"></div>
     </section>
 
-    <section id="about" class="about">
-      <h2>من نحن</h2>
-      <p>
-        عباية نور متجر إلكتروني سعودي متخصص في تصميم وتوريد العبايات بجودة عالية وتفاصيل أنيقة.
-        نهدف لتقديم تجربة شراء سهلة، منتجات موثوقة، وخدمة ما بعد البيع تهتم براحتك.
-      </p>
-    </section>
-
-    <section class="testimonials">
-      <h2>آراء عميلاتنا</h2>
-      <div class="testimonial-grid">
-        <blockquote>"الخامة ممتازة والتفصيل أنيق جدًا، وصلتني خلال يومين." <span>— ريم، الرياض</span></blockquote>
-        <blockquote>"تعامل راقي وسرعة في الرد، أكيد بطلب مرة ثانية." <span>— أمل، جدة</span></blockquote>
-        <blockquote>"المقاسات دقيقة والتغليف مرتب، شكراً لكم." <span>— جود، الدمام</span></blockquote>
+    <!-- ===== عرض: مستشار الصيانة ===== -->
+    <section class="view" id="view-advisor" hidden>
+      <div class="section-head">
+        <h2>مستشار الصيانة</h2>
+        <p>أدخل ممشى سيارتك وآخر صيانة — نحسب المستحق الآن ونبني لك سلة بأسعار حقيقية من أرخص المتاجر الموثوقة. يعمل محليًا في متصفحك بالكامل.</p>
       </div>
-    </section>
-
-    <section id="faq" class="faq">
-      <h2>الأسئلة الشائعة</h2>
-      <details><summary>هل يوجد استبدال أو استرجاع؟</summary><p>نعم، خلال 7 أيام بشرط أن تكون العباية بحالتها الأصلية.</p></details>
-      <details><summary>هل أقدر أطلب تفصيل خاص؟</summary><p>نعم، متاح تفصيل لبعض الموديلات عبر واتساب المتجر.</p></details>
-      <details><summary>ما هي مدة التوصيل؟</summary><p>داخل المدن الرئيسية 2-4 أيام عمل، وقد تزيد للمناطق البعيدة.</p></details>
-    </section>
-
-    <section id="contact" class="contact">
-      <h2>تواصلي معنا</h2>
-      <form id="contact-form">
-        <input id="contact-name" type="text" placeholder="الاسم الكامل" minlength="3" required />
-        <input id="contact-email" type="email" placeholder="البريد الإلكتروني" required />
-        <textarea id="contact-message" placeholder="رسالتك" rows="4" minlength="10" required></textarea>
-        <button type="submit">إرسال</button>
+      <form class="advisor-form" id="advisor-form">
+        <label>ممشى السيارة الحالي (كم)
+          <input type="number" id="adv-odometer" min="0" step="1000" placeholder="مثال: 85000" required />
+        </label>
+        <label>الممشى عند آخر صيانة (كم)
+          <input type="number" id="adv-last" min="0" step="1000" placeholder="مثال: 75000" required />
+        </label>
+        <label>معدل استخدامك الشهري (كم)
+          <input type="number" id="adv-monthly" min="100" step="100" value="1500" />
+        </label>
+        <button type="submit" class="primary-btn">احسب صيانتي</button>
       </form>
+      <div id="advisor-result" class="advisor-result"></div>
     </section>
+
+    <!-- ===== عرض: أدوات ذكية ===== -->
+    <section class="view" id="view-tools" hidden>
+      <div class="section-head">
+        <h2>أدوات ذكية — بلا أي API خارجي</h2>
+        <p>كلها تعمل محليًا في جهازك، حتى بدون إنترنت.</p>
+      </div>
+
+      <div class="tool-card">
+        <h3>🧮 حاسبة التكلفة النهائية للشراء من الخارج</h3>
+        <p class="muted">السعر المعروض في المتجر الأجنبي ليس ما ستدفعه فعلًا. أدخل الأرقام لتعرف السعر الحقيقي «عند الباب».</p>
+        <form id="import-calc" class="calc-form">
+          <label>سعر المنتج (ر.س)<input type="number" id="calc-price" min="0" step="0.01" placeholder="مثال: 200" required /></label>
+          <label>الشحن الدولي (ر.س)<input type="number" id="calc-ship" min="0" step="0.01" placeholder="مثال: 80" required /></label>
+          <label>رسوم وسيط الشحن إن وجد (ر.س)<input type="number" id="calc-fwd" min="0" step="0.01" value="0" /></label>
+          <button type="submit" class="primary-btn small">احسب</button>
+        </form>
+        <div id="calc-result" class="calc-result"></div>
+      </div>
+
+      <div class="tool-card">
+        <h3>🛡️ كاشف التقليد</h3>
+        <p class="muted">اختر نوع القطعة لتحصل على قائمة تحقق من الأصالة ومؤشر خطورة الغش في هذا الصنف.</p>
+        <div class="chips" id="cf-chips"></div>
+        <div id="cf-result"></div>
+      </div>
+
+      <div class="tool-card assistant-card">
+        <h3>💬 «دلّيل» — مساعدك الفوري</h3>
+        <p class="muted">مساعد يعمل بقواعد ذكية محلية فوق بياناتنا المرصودة — بدون إنترنت وبدون AI خارجي. جرّب: «وش أرخص فلتر؟» أو «هل الشراء من الخارج يستاهل؟»</p>
+        <div id="chat-log" class="chat-log" aria-live="polite"></div>
+        <form id="chat-form" class="chat-form">
+          <input type="text" id="chat-input" placeholder="اكتب سؤالك..." autocomplete="off" />
+          <button type="submit" class="primary-btn small">أرسل</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ===== عرض: المنهجية ===== -->
+    <section class="view" id="view-method" hidden>
+      <div class="section-head"><h2>منهجيتنا — الشفافية نفسها ميزة</h2></div>
+      <div class="method-grid">
+        <article class="method-card">
+          <h3>📌 من أين تأتي الأسعار؟</h3>
+          <p>كل سعر رُصد يدويًا من صفحة المنتج الرسمية في المتجر نفسه، ومسجّل معه رابط المصدر وتاريخ الرصد. أي سعر لم نستطع التحقق منه من مصدره <b>لا يُعرض إطلاقًا</b> — تجد بدلًا منه رابط المنتج مع ملاحظة «لم نرصد السعر بعد».</p>
+        </article>
+        <article class="method-card">
+          <h3>⚖️ كيف نحسب درجة الثقة؟</h3>
+          <p>معادلة معلنة من عوامل موزونة تحققنا منها: <b>منصة/جهة رسمية (30%)</b>، <b>سياسة إرجاع معلنة (25%)</b>، <b>دفع آمن متعدد (20%)</b>، <b>تاريخ تشغيلي طويل (15%)</b>، <b>تحقق مِرشاد المباشر من الموقع (10%)</b>. العامل غير المؤكد لا يُحسب سلبًا ولا إيجابًا — يظهر «غير مؤكد» وتنخفض «نسبة اكتمال البيانات» للمتجر.</p>
+        </article>
+        <article class="method-card">
+          <h3>🏷️ كيف نحكم على السعر؟</h3>
+          <p>حسابيًا وليس رأيًا: نقارن كل عرض بمتوسط العروض المرصودة لنفس القطعة. أقل من المتوسط بـ 15% فأكثر = <b>صفقة ممتازة</b>، حول المتوسط = <b>سعر عادل</b>، أعلى بـ 15% فأكثر = <b>مبالغ فيه</b>. وإذا لم يوجد إلا عرض واحد نقول ذلك بصراحة بدل إصدار حكم.</p>
+        </article>
+        <article class="method-card">
+          <h3>🚫 ما لا نفعله</h3>
+          <p>لا تقييمات نجوم مخترعة، لا «آراء عملاء» مجهولة المصدر، لا أسعار تقديرية تُعرض كأنها حقيقية، ولا عمولات خفية تغيّر الترتيب. ترتيبنا الذكي معادلة معلنة: السعر مقابل درجة الثقة.</p>
+        </article>
+        <article class="method-card">
+          <h3>⏱️ حدودنا بصدق</h3>
+          <p>الأسعار لا تتحدث تلقائيًا (لا يوجد خادم) — لذلك نعرض تاريخ الرصد بجانب كل سعر ونذكّرك بالتحقق قبل الشراء. بعض المتاجر تمنع الفحص الآلي فتظهر لدينا «بيانات غير مكتملة» بدل أرقام مخمّنة.</p>
+        </article>
+        <article class="method-card">
+          <h3>🇸🇦 داخلي × خارجي</h3>
+          <p>نغطي المتاجر السعودية والمنصات العالمية التي تشحن للمملكة، ونوضح الفرق الحقيقي: الخارجي أرخص ظاهريًا لكن الشحن + ضريبة 15% + الجمارك + الانتظار أسابيع تقلب الحسبة غالبًا. جرّب حاسبتنا وشف بنفسك.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ===== عرض: المفضلة ===== -->
+    <section class="view" id="view-favs" hidden>
+      <div class="section-head"><h2>مفضلتك</h2><p>القطع التي تتابعها — محفوظة في جهازك فقط.</p></div>
+      <div class="products" id="favs-list"></div>
+    </section>
+
   </main>
 
-  <div id="cart-overlay" class="cart-overlay" hidden></div>
-  <aside id="cart-drawer" class="cart-drawer" aria-hidden="true">
-    <div class="cart-header">
-      <h3>سلة المشتريات</h3>
-      <button id="close-cart" aria-label="إغلاق السلة">✕</button>
-    </div>
-    <div id="cart-items" class="cart-items"></div>
-    <div class="cart-footer">
-      <p>الإجمالي: <strong id="cart-total">0 ر.س</strong></p>
-      <button id="checkout-btn">إتمام الطلب</button>
-      <a id="whatsapp-checkout" class="wa-checkout" target="_blank" rel="noopener">إرسال الطلب عبر واتساب</a>
-    </div>
-  </aside>
+  <!-- نافذة المقارنة -->
+  <dialog id="compare-dialog">
+    <div class="dialog-head"><h3>مقارنة جنبًا إلى جنب</h3><button class="icon-btn" id="compare-close" aria-label="إغلاق">✕</button></div>
+    <div id="compare-body"></div>
+  </dialog>
+
+  <!-- نافذة سيارتي -->
+  <dialog id="my-car-dialog">
+    <div class="dialog-head"><h3>🚗 حدد سيارتك</h3><button class="icon-btn" id="my-car-close" aria-label="إغلاق">✕</button></div>
+    <p class="muted">سيعرض الدليل القطع المتوافقة مع سيارتك أولًا. يُحفظ في جهازك فقط.</p>
+    <div class="chips" id="my-car-brands"></div>
+    <button id="my-car-clear" class="ghost-btn small">إلغاء التحديد</button>
+  </dialog>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-  <footer>
-    <p>© 2026 عباية نور - جميع الحقوق محفوظة</p>
-    <p>واتساب الطلبات: <a href="https://wa.me/966500000000" target="_blank" rel="noopener">+966 50 000 0000</a></p>
+  <footer class="footer">
+    <p><strong>مِرشاد</strong> — دليل مستقل، لا نبيع شيئًا ولا نأخذ عمولة على الترتيب.</p>
+    <p class="muted">الأسعار مرصودة بتاريخ <span class="data-date"></span> من مصادرها الرسمية وقابلة للتغيّر. مِرشاد لا يتحمل مسؤولية تغيّر الأسعار أو سياسات المتاجر — تحقق دائمًا قبل الدفع.</p>
   </footer>
 
+  <script src="data.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

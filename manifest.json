@@ -1,0 +1,14 @@
+{
+  "name": "مِرشاد — دليلك السعودي الذكي",
+  "short_name": "مِرشاد",
+  "description": "دليل سعودي يقارن أسعار قطع الغيار الحقيقية ويكشف مصداقية المتاجر",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0c1512",
+  "theme_color": "#0b3d2e",
+  "icons": [
+    { "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
